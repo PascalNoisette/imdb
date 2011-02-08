@@ -1,5 +1,6 @@
 package org.neo4j.examples.imdb.domain;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -148,6 +149,8 @@ class ImdbServiceImpl implements ImdbService
 
     public List<?> getBaconPath( final Actor actor )
     {
+        return Collections.emptyList();
+        /*
         final Node baconNode;
         if ( actor == null )
         {
@@ -167,6 +170,7 @@ class ImdbServiceImpl implements ImdbService
         final List<Node> list = pathFinder.shortestPath( actorNode, baconNode,
             RelTypes.ACTS_IN );
         return convertNodesToActorsAndMovies( list );
+        */
     }
 
     private List<?> convertNodesToActorsAndMovies( final List<Node> list )

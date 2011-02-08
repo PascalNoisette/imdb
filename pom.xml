@@ -15,7 +15,7 @@
 	<name>Neo4j IMDB Application</name>
 	<description>A small Neo4j sample web application using the IMDB data set.
 	The example uses Spring Framework and the Jetty web server.</description>
-
+    <packaging>war</packaging>
 	<repositories>
 		<repository>
 			<id>neo4j-public-repository</id>
@@ -42,6 +42,11 @@
 			<groupId>org.neo4j</groupId>
 			<artifactId>neo4j-lucene-index</artifactId>
 			<version>0.2-1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-rest-graphdb</artifactId>
+			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<!-- Spring -->
 		<dependency>

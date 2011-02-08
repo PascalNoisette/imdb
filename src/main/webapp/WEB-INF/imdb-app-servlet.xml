@@ -7,12 +7,38 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 	<context:annotation-config />
+    <!--tx:annotation-driven mode="proxy" transaction-manager="transactionManager"/>
+    <bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+        <property name="transactionManager">
+            <bean class="org.neo4j.kernel.impl.transaction.SpringTransactionManager" >
+                <constructor-arg index="0" ref="graphDbService" />
+            </bean>
+        </property>
+        <property name="userTransaction">
+            <bean class="org.neo4j.kernel.impl.transaction.UserTransactionImpl">
+                <constructor-arg index="0" ref="graphDbService" />
+            </bean>
+         </property>
+    </bean>
+    <bean id="graphDbService" class="org.neo4j.rest.graphdb.GraphDatabaseFactory" factory-method="databaseFor" destroy-method="shutdown">
+        <constructor-arg index="0" value="imdb" />
+    </bean-->
+
 
 	<!-- Beans -->
-	<bean id="graphDbService" class="org.neo4j.kernel.EmbeddedGraphDatabase"
+	<!--bean id="graphDbService" class="org.neo4j.kernel.EmbeddedGraphDatabase"
 		init-method="enableRemoteShell" destroy-method="shutdown">
 		<constructor-arg index="0" value="target/neo4j-db" />
-	</bean>
+	</bean-->
+	<!--bean id="graphDbService" class="org.neo4j.rest.graphdb.GraphDatabaseFactory" factory-method="databaseFor" destroy-method="shutdown">
+		<constructor-arg index="0" value="http://495cb74f.neo4j.atns.de:7474/app1/db/data" /> <!- http://495cb74f.neo4j.atns.de:7474/app1/db/data ->
+	</bean-->
+
+    <bean id="graphDbService" class="org.neo4j.rest.graphdb.RestGraphDatabase" destroy-method="shutdown">
+        <constructor-arg index="0" value="http://4c36b641.imdb.hosted.neo4j.org:7474/db/data" />
+        <constructor-arg index="1" value="imdb"/>
+        <constructor-arg index="2" value="dbmi"/>
+   </bean>
 
 	<bean id="imdbService" class="org.neo4j.examples.imdb.domain.ImdbServiceImpl" />
 	<bean id="searchEngine" class="org.neo4j.examples.imdb.domain.ImdbSearchEngineImpl" />
@@ -51,16 +77,4 @@
 		<property name="successView" value="setup-message" />
 	</bean>
 	<bean id="imdbSetup" class="org.neo4j.examples.imdb.web.ImdbSetupControllerDelegate" />
-
-	<!-- Transactions -->
-	<tx:annotation-driven />
-	<bean id="transactionManager"
-		class="org.springframework.transaction.jta.JtaTransactionManager">
-		<property name="transactionManager" ref="neo4jTransactionManagerService" />
-		<property name="userTransaction" ref="neo4jUserTransactionService" />
-	</bean>
-	<bean id="neo4jTransactionManagerService" class="org.neo4j.kernel.impl.transaction.SpringTransactionManager" />
-	<bean id="neo4jUserTransactionService" class="org.neo4j.kernel.impl.transaction.UserTransactionImpl">
-		<constructor-arg index="0" ref="graphDbService" />
-	</bean>
 </beans>
