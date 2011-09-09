@@ -1,3 +1,21 @@
+/**
+ * Licensed to Neo Technology under one or more contributor
+ * license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright
+ * ownership. Neo Technology licenses this file to you under
+ * the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.neo4j.examples.imdb.domain;
 
 import java.util.LinkedList;
@@ -35,6 +53,7 @@ class ImdbServiceImpl implements ImdbService
         this.nodeIndex = graphDbService.index().forNodes(EXACT_INDEX_NAME);
     }
 
+    @Override
     public Actor createActor( final String name )
     {
         final Node actorNode = graphDbService.createNode();
@@ -45,6 +64,7 @@ class ImdbServiceImpl implements ImdbService
         return actor;
     }
 
+    @Override
     public Movie createMovie( final String title, final int year )
     {
         final Node movieNode = graphDbService.createNode();
@@ -56,6 +76,7 @@ class ImdbServiceImpl implements ImdbService
         return movie;
     }
 
+    @Override
     public Role createRole( final Actor actor, final Movie movie,
         final String roleName )
     {
@@ -79,6 +100,7 @@ class ImdbServiceImpl implements ImdbService
         return role;
     }
 
+    @Override
     public Actor getActor( final String name )
     {
         Node actorNode = getSingleNode(NAME_INDEX, name);
@@ -102,6 +124,7 @@ class ImdbServiceImpl implements ImdbService
         return null;
     }
 
+    @Override
     public Movie getMovie( final String title )
     {
         Node movieNode = getExactMovieNode( title );
@@ -117,6 +140,7 @@ class ImdbServiceImpl implements ImdbService
         return movie;
     }
 
+    @Override
     public Movie getExactMovie( final String title )
     {
         Node movieNode = getExactMovieNode( title );
@@ -133,6 +157,7 @@ class ImdbServiceImpl implements ImdbService
         return getSingleNode( TITLE_INDEX, title );
     }
 
+    @Override
     @Transactional
     public void setupReferenceRelationship()
     {
@@ -146,6 +171,7 @@ class ImdbServiceImpl implements ImdbService
         referenceNode.createRelationshipTo( baconNode, RelTypes.IMDB );
     }
 
+    @Override
     public List<?> getBaconPath( final Actor actor )
     {
         final Node baconNode;

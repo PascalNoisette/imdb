@@ -1,3 +1,21 @@
+/**
+ * Licensed to Neo Technology under one or more contributor
+ * license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright
+ * ownership. Neo Technology licenses this file to you under
+ * the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.neo4j.examples.imdb.domain;
 
 import java.util.ArrayList;
@@ -31,23 +49,27 @@ public class ImdbSearchEngineImpl implements ImdbSearchEngine
         this.nodeIndex = graphDbService.index().forNodes(SEARCH_INDEX_NAME);
     }
 
+    @Override
     public void indexActor( Actor actor )
     {
         index( actor.getName(), ((ActorImpl) actor).getUnderlyingNode(),
             NAME_PART_INDEX, ImdbSearchRelTypes.PART_OF_NAME );
     }
 
+    @Override
     public void indexMovie( Movie movie )
     {
         index( movie.getTitle(), ((MovieImpl) movie).getUnderlyingNode(),
             TITLE_PART_INDEX, ImdbSearchRelTypes.PART_OF_TITLE );
     }
 
+    @Override
     public Node searchActor( String name )
     {
         return searchSingle( name, NAME_PART_INDEX, ImdbSearchRelTypes.PART_OF_NAME );
     }
 
+    @Override
     public Node searchMovie( String title )
     {
         return searchSingle( title, TITLE_PART_INDEX, ImdbSearchRelTypes.PART_OF_TITLE );
@@ -154,6 +176,7 @@ public class ImdbSearchEngineImpl implements ImdbSearchEngine
         // sort words according to the number of relationships (ascending)
         Collections.sort( wordList, new Comparator<Node>()
         {
+            @Override
             public int compare( final Node left, final Node right )
             {
                 int leftCount = (Integer) left.getProperty( COUNT_PROPERTY, 0 );
