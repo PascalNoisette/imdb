@@ -123,6 +123,9 @@ class MovieImpl implements Movie
     @Override
     public String getProperty(String key) 
     {
-        return underlyingNode.getProperty(key).toString();
+        if (underlyingNode.hasProperty(key)) {
+            return underlyingNode.getProperty(key).toString();
+        }
+        return "";
     }
 }
