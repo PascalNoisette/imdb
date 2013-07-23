@@ -29,13 +29,20 @@ public interface Role
      * @return name of this role or null if no role found
      */
     String getName();
+    
+    /**
+     * Returns the role name. Ex: "Reeves, Keanu" acted in "Matrix, The (1999)"
+     * as "Neo". This method would then return "Neo" as name.
+     * @return name of this role or null if no role found
+     */
+    String getCharacter();
 
     /**
      * Sets the role name.
      * @param name
      *            role name
      */
-    void setName( String name );
+    void setCharacter( String name );
 
     /**
      * Returns the movie this role is connected to.

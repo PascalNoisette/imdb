@@ -37,9 +37,9 @@ public interface ImdbReader
      * Creates new actors specifying what movies the actors acted in
      * from a {@link ActorData} list.
      * Every actor will be indexed.
-     * @param actorList actors to create and index
+     * @param personList actors to create and index
      */
-    void newActors( List<PersonData> actorList );
+    void newPersons( List<PersonData> personList );
 
     /**
      * Import rating for movie

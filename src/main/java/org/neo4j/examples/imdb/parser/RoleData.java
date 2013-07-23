@@ -18,18 +18,22 @@
  */
 package org.neo4j.examples.imdb.parser;
 
+import org.neo4j.examples.imdb.domain.RelTypes;
+
 /**
  * Holds information about what role an actor has in a movie
  */
 public class RoleData
 {
     private final String title;
-    private final String role;
+    private final RelTypes role;
+    private final String character;
 
-    RoleData( final String title, final String role )
+    RoleData( final String title, final RelTypes role, String character)
     {
         this.title = title;
         this.role = role;
+        this.character = character;
     }
 
     /**
@@ -46,8 +50,18 @@ public class RoleData
      * if no information is available.
      * @return actor role or null if information not avilable
      */
-    public String getRole()
+    public RelTypes getRole()
     {
         return this.role;
+    }
+    
+    /**
+     * Returns the role the actor had in the movie, may be <code>null</code>
+     * if no information is available.
+     * @return actor role or null if information not avilable
+     */
+    public String getCharacter()
+    {
+        return this.character;
     }
 }

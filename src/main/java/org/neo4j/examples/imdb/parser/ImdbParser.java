@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipInputStream;
 import org.graphipedia.dataimport.ProgressCounter;
+import org.neo4j.examples.imdb.domain.RelTypes;
 
 /**
  * A <code>ImdbParser</code> can parse the movie and actor/actress lists from
@@ -186,23 +187,27 @@ public class ImdbParser
         String result = "";
         BufferedReader fileReader = getFileReader( actorFile, ACTOR_MARKER,
             ACTOR_SKIPS );
-        result += "Actors: " + parseActorItems( fileReader ) + "\n";
+        result += "Actors: " + parsePersonFile( fileReader, RelTypes.ACTOR ) + "\n";
         fileReader.close();
         fileReader = getFileReader( actressFile, ACTRESSES_MARKER,
             ACTRESS_SKIPS );
-        result += "Actresses: " + parseActorItems( fileReader );
+        result += "Actresses: " + parsePersonFile( fileReader, RelTypes.ACTOR );
         return result;
     }
 
-    private String parseActorItems( BufferedReader fileReader )
-        throws IOException
-    {
+
+    public Object parsePersonFile(BufferedReader fileReader, RelTypes batchName) throws IOException {
+    
+        if ( fileReader == null )
+        {
+            throw new IllegalArgumentException( "Null " + batchName + " file" );
+        }
         String line = fileReader.readLine();
         String currentActor = null;
         final List<PersonData> buffer = new LinkedList<PersonData>();
         final List<RoleData> movies = new ArrayList<RoleData>();
         int movieCount = 0;
-        ProgressCounter actorCount = new ProgressCounter("actors");
+        ProgressCounter actorCount = new ProgressCounter(batchName.toString());
         while ( line != null )
         {
             // get rid of blank lines
@@ -265,18 +270,18 @@ public class ImdbParser
                         title = title.substring( 0, spaces ).trim();
                     }
                 }
-                movies.add( new RoleData( title, character ) );
+                movies.add( new RoleData( title, batchName, character ) );
                 movieCount++;
                 if ( movieCount % BUFFER_SIZE == 0 )
                 {
-                    reader.newActors( buffer );
+                    reader.newPersons( buffer );
                     buffer.clear();
                 }
             }
             line = fileReader.readLine();
         }
-        reader.newActors( buffer );
-        return (actorCount.getCount() + " added including " + movieCount + " characters parsed and injected.");
+        reader.newPersons( buffer );
+        return (actorCount.getCount() + " " + batchName + " added including " + movieCount + " characters parsed and injected.");
     }
 
     /**
@@ -323,5 +328,12 @@ public class ImdbParser
 
         return fileReader;
     }
+
+    
+    public Object parseDirectors(String filename) throws IOException {
+        return parsePersonFile(getFileReader(filename, "THE DIRECTORS LIST", 4 ), RelTypes.DIRECTOR);
+    }
+    
+    
 
 }

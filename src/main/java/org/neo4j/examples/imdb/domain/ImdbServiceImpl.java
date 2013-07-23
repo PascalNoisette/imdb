@@ -56,7 +56,7 @@ class ImdbServiceImpl implements ImdbService
     }
 
     @Override
-    public Person createActor( final String name )
+    public Person createPerson( final String name )
     {
         final Node actorNode = graphDbService.createNode();
         final Person actor = new PersonImpl( actorNode );
@@ -80,7 +80,7 @@ class ImdbServiceImpl implements ImdbService
 
     @Override
     public Role createRole( final Person actor, final Movie movie,
-        final String roleName )
+        final RelTypes roleName, final String characterName )
     {
         if ( actor == null )
         {
@@ -93,11 +93,11 @@ class ImdbServiceImpl implements ImdbService
         final Node actorNode = ((PersonImpl) actor).getUnderlyingNode();
         final Node movieNode = ((MovieImpl) movie).getUnderlyingNode();
         final Relationship rel = actorNode.createRelationshipTo( movieNode,
-            RelTypes.ACTS_IN );
+            roleName);
         final Role role = new RoleImpl( rel );
-        if ( roleName != null )
+        if ( characterName != null )
         {
-            role.setName( roleName );
+            role.setCharacter(characterName );
         }
         return role;
     }
@@ -193,7 +193,7 @@ class ImdbServiceImpl implements ImdbService
         }
         final Node actorNode = ((PersonImpl) actor).getUnderlyingNode();
         final List<Node> list = pathFinder.shortestPath( actorNode, baconNode,
-            RelTypes.ACTS_IN );
+            RelTypes.ACTOR );
         return convertNodesToActorsAndMovies( list );
     }
 

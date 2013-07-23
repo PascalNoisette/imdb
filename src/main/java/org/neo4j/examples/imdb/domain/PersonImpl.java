@@ -58,7 +58,7 @@ class PersonImpl implements Person
     {
         final List<Movie> movies = new LinkedList<Movie>();
         for ( Relationship rel : underlyingNode.getRelationships(
-            RelTypes.ACTS_IN, Direction.OUTGOING ) )
+            RelTypes.ACTOR, Direction.OUTGOING ) )
         {
             movies.add( new MovieImpl( rel.getEndNode() ) );
         }
@@ -70,7 +70,7 @@ class PersonImpl implements Person
     {
         final Node movieNode = ((MovieImpl) inMovie).getUnderlyingNode();
         for ( Relationship rel : underlyingNode.getRelationships(
-            RelTypes.ACTS_IN, Direction.OUTGOING ) )
+            RelTypes.ACTOR, Direction.OUTGOING ) )
         {
             if ( rel.getEndNode().equals( movieNode ) )
             {

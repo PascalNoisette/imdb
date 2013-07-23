@@ -55,11 +55,6 @@ public interface Movie
      */
     void addProperties( Map<String, ? extends Object> properties );
 
-    /**
-     * Returns all actors that acted in this movie.
-     * @return actors that acted in this movie
-     */
-    Iterable<Person> getActors();
 
     /**
      * Return the property value value
@@ -67,4 +62,10 @@ public interface Movie
      * @return String
      */
     public String getProperty(String key);
+
+  /**
+     * Returns all directors that make this movie.
+     * @return list
+     */
+    public Iterable<Person> getPersonsByType(RelTypes type);
 }

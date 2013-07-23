@@ -1,21 +1,28 @@
 <%@ include file="/jsp/include.jsp"%>
 <%@ include file="/jsp/head.jsp"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <title><c:out value="${model.movieTitle}" /> : IMDB powered by Neo4j</title>
 </head>
 <body>
 <h1><c:out value="${model.movieTitle}" /> (<c:out value="${model.movieRatings}" />/10)</h1>
-<h3>Actors</h3>
+<h3>Cast</h3>
 <ul class="actors">
-	<c:forEach items="${model.actorInfo}" var="actorInfo">
+	<c:forEach items="${model.peopleInfo}" var="peopleInfo">
 		<c:url value="actor.html" var="actorURL">
-			<c:param name="name" value="${actorInfo.name}" />
+			<c:param name="name" value="${peopleInfo.name}" />
 		</c:url>
-		<li class="actor"><a href='<c:out value="${actorURL}"/>'><c:out
-			value="${actorInfo.name}" /></a> as <em><c:out
-			value="${actorInfo.role}" /></em></li>
+		<li class="${fn:toLowerCase(peopleInfo.role)}"><a href='<c:out value="${actorURL}"/>'><c:out
+			value="${peopleInfo.name}" /></a> 
+                        <c:if test="${peopleInfo.character!=null}">
+                            as <em><c:out
+                            value="${peopleInfo.character}" /></em>
+                        </c:if>
+                </li>
 	</c:forEach>
 </ul>
+
 <%@ include file="/jsp/menu.jsp"%>
 </body>
 </html>

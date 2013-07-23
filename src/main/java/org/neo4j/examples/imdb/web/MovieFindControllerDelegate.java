@@ -28,6 +28,7 @@ import javax.servlet.ServletException;
 import org.neo4j.examples.imdb.domain.Person;
 import org.neo4j.examples.imdb.domain.ImdbService;
 import org.neo4j.examples.imdb.domain.Movie;
+import org.neo4j.examples.imdb.domain.RelTypes;
 import org.neo4j.examples.imdb.domain.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,21 +66,26 @@ public class MovieFindControllerDelegate implements FindControllerDelegate
         {
             model.put( "movieTitle", movie.getTitle() );
             model.put( "movieRatings",  movie.getProperty("rank") );
-            final Collection<ActorInfo> actorInfo = new TreeSet<ActorInfo>();
-            for ( Person actor : movie.getActors() )
+            final Collection<PersonInfo> peopleInfo = new TreeSet<PersonInfo>();
+            for ( Person actor : movie.getPersonsByType(RelTypes.ACTOR) )
             {
-                actorInfo.add( new ActorInfo( actor, actor.getRole( movie ) ) );
+                peopleInfo.add( new PersonInfo( actor, actor.getRole( movie ) ) );
             }
-            model.put( "actorInfo", actorInfo );
+            for ( Person director : movie.getPersonsByType(RelTypes.DIRECTOR) )
+            {
+                peopleInfo.add( new PersonInfo( director, director.getRole( movie ) ) );
+            }
+            model.put( "peopleInfo", peopleInfo );
         }
     }
 
-    public static final class ActorInfo implements Comparable<ActorInfo>
+    public static final class PersonInfo implements Comparable<PersonInfo>
     {
         private String name;
         private String role;
+        private String character;
 
-        public ActorInfo( final Person actor, final Role role )
+        public PersonInfo( final Person actor, final Role role )
         {
             setName( actor.getName() );
             if ( role == null || role.getName() == null )
@@ -89,6 +95,9 @@ public class MovieFindControllerDelegate implements FindControllerDelegate
             else
             {
                 setRole( role.getName() );
+                if (role.getCharacter() != null && !"".equals(role.getCharacter())) {
+                    setCharacter( role.getCharacter() );
+                }
             }
         }
 
@@ -111,9 +120,19 @@ public class MovieFindControllerDelegate implements FindControllerDelegate
         {
             return role;
         }
+        
+         public void setCharacter( final String character )
+        {
+            this.character = character;
+        }
+
+        public String getCharacter()
+        {
+            return character;
+        }
 
         @Override
-        public int compareTo( ActorInfo otherActorInfo )
+        public int compareTo( PersonInfo otherActorInfo )
         {
             return getName().compareTo( otherActorInfo.getName() );
         }

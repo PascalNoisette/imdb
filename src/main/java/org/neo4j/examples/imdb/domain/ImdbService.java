@@ -28,7 +28,7 @@ public interface ImdbService
      * @param name
      * @return the new actor
      */
-    Person createActor( String name );
+    Person createPerson( String name );
 
     /**
      * Store a new movie and add the title to the index.
@@ -50,7 +50,8 @@ public interface ImdbService
      *            name of the role
      * @return the new role
      */
-    Role createRole( Person actor, Movie movie, String roleName );
+    Role createRole( final Person actor, final Movie movie,
+        final RelTypes roleName, final String characterName );
 
     /**
      * Returns the actor with the given <code>name</code> or <code>null</code>

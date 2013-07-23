@@ -22,7 +22,7 @@ import org.neo4j.graphdb.Relationship;
 
 class RoleImpl implements Role
 {
-    private static final String ROLE_PROPERTY = "role";
+    private static final String CHARACTER_NAME_PROPERTY = "character_name";
 
     private final Relationship underlyingRel;
 
@@ -49,16 +49,23 @@ class RoleImpl implements Role
     }
 
     @Override
-    public String getName()
+    public String getCharacter()
     {
-        return ( String ) underlyingRel.getProperty( ROLE_PROPERTY, null );
+        return ( String ) underlyingRel.getProperty( CHARACTER_NAME_PROPERTY, null );
     }
 
     @Override
-    public void setName( String name )
+    public void setCharacter( String name )
     {
-        underlyingRel.setProperty( ROLE_PROPERTY, name );
+        underlyingRel.setProperty( CHARACTER_NAME_PROPERTY, name );
     }
+
+    @Override
+    public String getName()
+    {
+        return ( String ) underlyingRel.getType().name();
+    }
+
 
     @Override
     public boolean equals( Object otherRole )

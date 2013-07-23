@@ -50,7 +50,9 @@ public class ImdbSetupControllerDelegate implements SetupControllerDelegate
             message.append(
                 parser.parseActors( IMDB_DATADIR + "actors.list.gz",
                     IMDB_DATADIR + "actresses.list.gz" ) ).append( '\n' );
-            message.append(
+           message.append(
+                parser.parseDirectors( IMDB_DATADIR + "directors.list.gz"  )).append( '\n' );
+           message.append(
                 parser.parseRatings(IMDB_DATADIR + "ratings.list.gz" ) ).append(
                 '\n' );
             imdbService.setupReferenceRelationship();

@@ -34,7 +34,7 @@ class ImdbReaderImpl implements ImdbReader
 
     @Override
     @Transactional
-    public void newActors( final List<PersonData> actorList )
+    public void newPersons( final List<PersonData> actorList )
     {
         for ( PersonData actorData : actorList )
         {
@@ -59,14 +59,14 @@ class ImdbReaderImpl implements ImdbReader
 
     private void newActor( final String name, final RoleData[] movieRoles )
     {
-        final Person actor = imdbService.createActor( name );
+        final Person actor = imdbService.createPerson( name );
         for ( RoleData movieRole : movieRoles )
         {
             final Movie movie = imdbService
                 .getExactMovie( movieRole.getTitle() );
             if ( movie != null )
             {
-                imdbService.createRole( actor, movie, movieRole.getRole() );
+                imdbService.createRole( actor, movie, movieRole.getRole(),  movieRole.getCharacter());
             }
         }
     }
