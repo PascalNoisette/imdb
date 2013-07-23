@@ -25,7 +25,7 @@ import java.util.TreeSet;
 
 import javax.servlet.ServletException;
 
-import org.neo4j.examples.imdb.domain.Actor;
+import org.neo4j.examples.imdb.domain.Person;
 import org.neo4j.examples.imdb.domain.ImdbService;
 import org.neo4j.examples.imdb.domain.Movie;
 import org.neo4j.examples.imdb.domain.Role;
@@ -66,7 +66,7 @@ public class MovieFindControllerDelegate implements FindControllerDelegate
             model.put( "movieTitle", movie.getTitle() );
             model.put( "movieRatings",  movie.getProperty("rank") );
             final Collection<ActorInfo> actorInfo = new TreeSet<ActorInfo>();
-            for ( Actor actor : movie.getActors() )
+            for ( Person actor : movie.getActors() )
             {
                 actorInfo.add( new ActorInfo( actor, actor.getRole( movie ) ) );
             }
@@ -79,7 +79,7 @@ public class MovieFindControllerDelegate implements FindControllerDelegate
         private String name;
         private String role;
 
-        public ActorInfo( final Actor actor, final Role role )
+        public ActorInfo( final Person actor, final Role role )
         {
             setName( actor.getName() );
             if ( role == null || role.getName() == null )

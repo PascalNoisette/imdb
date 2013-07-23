@@ -56,10 +56,10 @@ class ImdbServiceImpl implements ImdbService
     }
 
     @Override
-    public Actor createActor( final String name )
+    public Person createActor( final String name )
     {
         final Node actorNode = graphDbService.createNode();
-        final Actor actor = new ActorImpl( actorNode );
+        final Person actor = new PersonImpl( actorNode );
         actor.setName( name );
         searchEngine.indexActor( actor );
         nodeIndex.add(actorNode, NAME_INDEX, name);
@@ -79,7 +79,7 @@ class ImdbServiceImpl implements ImdbService
     }
 
     @Override
-    public Role createRole( final Actor actor, final Movie movie,
+    public Role createRole( final Person actor, final Movie movie,
         final String roleName )
     {
         if ( actor == null )
@@ -90,7 +90,7 @@ class ImdbServiceImpl implements ImdbService
         {
             throw new IllegalArgumentException( "Null movie" );
         }
-        final Node actorNode = ((ActorImpl) actor).getUnderlyingNode();
+        final Node actorNode = ((PersonImpl) actor).getUnderlyingNode();
         final Node movieNode = ((MovieImpl) movie).getUnderlyingNode();
         final Relationship rel = actorNode.createRelationshipTo( movieNode,
             RelTypes.ACTS_IN );
@@ -103,17 +103,17 @@ class ImdbServiceImpl implements ImdbService
     }
 
     @Override
-    public Actor getActor( final String name )
+    public Person getActor( final String name )
     {
         Node actorNode = getSingleNode(NAME_INDEX, name);
         if ( actorNode == null )
         {
             actorNode = searchEngine.searchActor( name );
         }
-        Actor actor = null;
+        Person actor = null;
         if ( actorNode != null )
         {
-            actor = new ActorImpl( actorNode );
+            actor = new PersonImpl( actorNode );
         }
         return actor;
     }
@@ -174,7 +174,7 @@ class ImdbServiceImpl implements ImdbService
     }
 
     @Override
-    public List<?> getBaconPath( final Actor actor )
+    public List<?> getBaconPath( final Person actor )
     {
         final Node baconNode;
         if ( actor == null )
@@ -191,7 +191,7 @@ class ImdbServiceImpl implements ImdbService
             throw new NoSuchElementException(
                 "Unable to find Kevin Bacon actor" );
         }
-        final Node actorNode = ((ActorImpl) actor).getUnderlyingNode();
+        final Node actorNode = ((PersonImpl) actor).getUnderlyingNode();
         final List<Node> list = pathFinder.shortestPath( actorNode, baconNode,
             RelTypes.ACTS_IN );
         return convertNodesToActorsAndMovies( list );
@@ -205,7 +205,7 @@ class ImdbServiceImpl implements ImdbService
         {
             if ( mod++ % 2 == 0 )
             {
-                actorAndMovieList.add( new ActorImpl( node ) );
+                actorAndMovieList.add( new PersonImpl( node ) );
             }
             else
             {

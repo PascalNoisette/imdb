@@ -37,9 +37,9 @@ class RoleImpl implements Role
     }
 
     @Override
-    public Actor getActor()
+    public Person getActor()
     {
-        return new ActorImpl( underlyingRel.getStartNode() );
+        return new PersonImpl( underlyingRel.getStartNode() );
     }
 
     @Override

@@ -39,7 +39,7 @@ public interface ImdbReader
      * Every actor will be indexed.
      * @param actorList actors to create and index
      */
-    void newActors( List<ActorData> actorList );
+    void newActors( List<PersonData> actorList );
 
     /**
      * Import rating for movie

@@ -199,7 +199,7 @@ public class ImdbParser
     {
         String line = fileReader.readLine();
         String currentActor = null;
-        final List<ActorData> buffer = new LinkedList<ActorData>();
+        final List<PersonData> buffer = new LinkedList<PersonData>();
         final List<RoleData> movies = new ArrayList<RoleData>();
         int movieCount = 0;
         ProgressCounter actorCount = new ProgressCounter("actors");
@@ -219,7 +219,7 @@ public class ImdbParser
                 {
                     if ( movies.size() > 0 )
                     {
-                        buffer.add( new ActorData( currentActor, movies
+                        buffer.add( new PersonData( currentActor, movies
                             .toArray( new RoleData[movies.size()] ) ) );
                         actorCount.increment();
                         movies.clear();

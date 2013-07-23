@@ -20,7 +20,7 @@ package org.neo4j.examples.imdb.parser;
 
 import java.util.List;
 
-import org.neo4j.examples.imdb.domain.Actor;
+import org.neo4j.examples.imdb.domain.Person;
 import org.neo4j.examples.imdb.domain.ImdbService;
 import org.neo4j.examples.imdb.domain.Movie;
 import org.neo4j.helpers.collection.MapUtil;
@@ -34,9 +34,9 @@ class ImdbReaderImpl implements ImdbReader
 
     @Override
     @Transactional
-    public void newActors( final List<ActorData> actorList )
+    public void newActors( final List<PersonData> actorList )
     {
-        for ( ActorData actorData : actorList )
+        for ( PersonData actorData : actorList )
         {
             newActor( actorData.getName(), actorData.getMovieRoles() );
         }
@@ -59,7 +59,7 @@ class ImdbReaderImpl implements ImdbReader
 
     private void newActor( final String name, final RoleData[] movieRoles )
     {
-        final Actor actor = imdbService.createActor( name );
+        final Person actor = imdbService.createActor( name );
         for ( RoleData movieRole : movieRoles )
         {
             final Movie movie = imdbService

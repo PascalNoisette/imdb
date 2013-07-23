@@ -28,7 +28,7 @@ public interface ImdbService
      * @param name
      * @return the new actor
      */
-    Actor createActor( String name );
+    Person createActor( String name );
 
     /**
      * Store a new movie and add the title to the index.
@@ -50,7 +50,7 @@ public interface ImdbService
      *            name of the role
      * @return the new role
      */
-    Role createRole( Actor actor, Movie movie, String roleName );
+    Role createRole( Person actor, Movie movie, String roleName );
 
     /**
      * Returns the actor with the given <code>name</code> or <code>null</code>
@@ -59,7 +59,7 @@ public interface ImdbService
      *            name of actor
      * @return actor or <code>null</code> if not found
      */
-    Actor getActor( String name );
+    Person getActor( String name );
 
     /**
      * Return the movie with given <code>title</code> or <code>null</code> if
@@ -80,7 +80,7 @@ public interface ImdbService
      *            name of actor to find shortest path to Kevin Bacon
      * @return one of the shortest paths to Kevin Bacon
      */
-    List<?> getBaconPath( Actor actor );
+    List<?> getBaconPath( Person actor );
     
     /**
      * Add a relationship from some node to the reference node.

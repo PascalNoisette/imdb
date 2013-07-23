@@ -27,7 +27,7 @@ import java.util.TreeSet;
 
 import javax.servlet.ServletException;
 
-import org.neo4j.examples.imdb.domain.Actor;
+import org.neo4j.examples.imdb.domain.Person;
 import org.neo4j.examples.imdb.domain.ImdbService;
 import org.neo4j.examples.imdb.domain.Movie;
 import org.neo4j.examples.imdb.domain.Role;
@@ -51,12 +51,12 @@ public class ActorFindControllerDelegate implements FindControllerDelegate
         throws ServletException
     {
         final String name = ((ActorForm) command).getName();
-        final Actor actor = imdbService.getActor( name );
+        final Person actor = imdbService.getActor( name );
         populateModel( model, actor );
     }
 
     private void populateModel( final Map<String,Object> model,
-        final Actor actor )
+        final Person actor )
     {
         if ( actor == null )
         {
@@ -70,7 +70,7 @@ public class ActorFindControllerDelegate implements FindControllerDelegate
             final List<?> baconPathList = imdbService.getBaconPath( actor );
             model.put( "kevinBaconNumber", baconPathList.size() / 2 );
             final Collection<MovieInfo> movieInfo = new TreeSet<MovieInfo>();
-            for ( Movie movie : actor.getMovies() )
+            for ( Movie movie : actor.getRoles() )
             {
                 movieInfo.add( new MovieInfo( movie, actor.getRole( movie ) ) );
             }
@@ -78,9 +78,9 @@ public class ActorFindControllerDelegate implements FindControllerDelegate
             final List<String> baconPath = new LinkedList<String>();
             for ( Object actorOrMovie : baconPathList )
             {
-                if ( actorOrMovie instanceof Actor )
+                if ( actorOrMovie instanceof Person )
                 {
-                    baconPath.add( ((Actor) actorOrMovie).getName() );
+                    baconPath.add( ((Person) actorOrMovie).getName() );
                 }
                 else if ( actorOrMovie instanceof Movie )
                 {

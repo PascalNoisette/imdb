@@ -22,7 +22,7 @@ import org.neo4j.graphdb.Node;
 
 public interface ImdbSearchEngine
 {
-    void indexActor( Actor actor );
+    void indexActor( Person actor );
 
     void indexMovie( Movie movie );
 

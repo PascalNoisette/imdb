@@ -16,33 +16,41 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.neo4j.examples.imdb.parser;
+package org.neo4j.examples.imdb.domain;
 
-public class ActorData
+public interface Person
 {
-    private final String name;
-    private final RoleData[] movieRoles;
+    /**
+     * Returns this actors imdb-encoded name.
+     * @return his name
+     */
+    String getName();
 
     /**
-     * Create container for actor data.
+     * Set his name.
      * @param name
      *            name of actor
-     * @param movieRoles
-     *            movie roles of actor
      */
-    ActorData( final String name, final RoleData[] movieRoles )
-    {
-        this.movieRoles = movieRoles;
-        this.name = name;
-    }
+    void setName( String name );
 
-    public String getName()
-    {
-        return name;
-    }
+    /**
+     * Returns all movies this person acted in
+     * @return movies as actor
+     */
+    Iterable<Movie> getRoles();
+    
+     /**
+     * Returns all movies this person is related to.
+     * @return all movies
+     */
+    Iterable<Movie> getMovies();
 
-    public RoleData[] getMovieRoles()
-    {
-        return movieRoles;
-    }
+    /**
+     * Returns the specific role an actor had in a movie or null if actor didn't
+     * have a role in the movie.
+     * @param inMovie
+     *            the movie to get role for
+     * @return the role or null
+     */
+    Role getRole( Movie inMovie );
 }

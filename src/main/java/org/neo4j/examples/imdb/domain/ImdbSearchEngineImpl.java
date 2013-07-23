@@ -50,9 +50,9 @@ public class ImdbSearchEngineImpl implements ImdbSearchEngine
     }
 
     @Override
-    public void indexActor( Actor actor )
+    public void indexActor( Person actor )
     {
-        index( actor.getName(), ((ActorImpl) actor).getUnderlyingNode(),
+        index( actor.getName(), ((PersonImpl) actor).getUnderlyingNode(),
             NAME_PART_INDEX, ImdbSearchRelTypes.PART_OF_NAME );
     }
 

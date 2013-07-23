@@ -47,5 +47,5 @@ public interface Role
      * Returns the actor for this role.
      * @return actor for this role
      */
-    Actor getActor();
+    Person getActor();
 }

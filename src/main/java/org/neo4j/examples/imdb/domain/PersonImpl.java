@@ -25,13 +25,13 @@ import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 
-class ActorImpl implements Actor
+class PersonImpl implements Person
 {
     private static final String NAME_PROPERTY = "name";
 
     private final Node underlyingNode;
 
-    ActorImpl( final Node node )
+    PersonImpl( final Node node )
     {
         this.underlyingNode = node;
     }
@@ -54,7 +54,7 @@ class ActorImpl implements Actor
     }
 
     @Override
-    public Iterable<Movie> getMovies()
+    public Iterable<Movie> getRoles()
     {
         final List<Movie> movies = new LinkedList<Movie>();
         for ( Relationship rel : underlyingNode.getRelationships(
@@ -83,9 +83,9 @@ class ActorImpl implements Actor
     @Override
     public boolean equals( final Object otherActor )
     {
-        if ( otherActor instanceof ActorImpl )
+        if ( otherActor instanceof PersonImpl )
         {
-            return this.underlyingNode.equals( ((ActorImpl) otherActor)
+            return this.underlyingNode.equals( ((PersonImpl) otherActor)
                 .getUnderlyingNode() );
         }
         return false;
@@ -101,5 +101,10 @@ class ActorImpl implements Actor
     public String toString()
     {
         return "Actor '" + this.getName() + "'";
+    }
+
+    @Override
+    public Iterable<Movie> getMovies() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
