@@ -19,6 +19,7 @@
 package org.neo4j.examples.imdb.domain;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ImdbService
 {
@@ -86,4 +87,13 @@ public interface ImdbService
      * Will make it easy and fast to retrieve this node.
      */
     void setupReferenceRelationship();
+
+    /**
+     * Add rating info to movie node
+     * 
+     * @param title movie node name
+     * @param rank rank
+     * @param votes vote count
+     */
+    public void addPropertiesToMovie(String title, Map<String, ? extends Object> properties);
 }

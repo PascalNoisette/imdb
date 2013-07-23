@@ -20,6 +20,7 @@ package org.neo4j.examples.imdb.domain;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.neo4j.examples.imdb.util.PathFinder;
@@ -29,6 +30,7 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.IndexHits;
+import org.neo4j.helpers.collection.MapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -211,5 +213,13 @@ class ImdbServiceImpl implements ImdbService
             }
         }
         return actorAndMovieList;
+    }
+
+    @Override
+    public void addPropertiesToMovie(String title, Map<String, ? extends Object> properties) {
+        Movie movie = getMovie(title);
+        if (movie != null) {
+            movie.addProperties( properties );
+        }
     }
 }

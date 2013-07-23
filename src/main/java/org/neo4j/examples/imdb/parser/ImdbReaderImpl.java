@@ -23,6 +23,7 @@ import java.util.List;
 import org.neo4j.examples.imdb.domain.Actor;
 import org.neo4j.examples.imdb.domain.ImdbService;
 import org.neo4j.examples.imdb.domain.Movie;
+import org.neo4j.helpers.collection.MapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,5 +69,11 @@ class ImdbReaderImpl implements ImdbReader
                 imdbService.createRole( actor, movie, movieRole.getRole() );
             }
         }
+    }
+
+    @Override
+    public void newRating(RatingData ratingData) 
+    {
+        imdbService.addPropertiesToMovie(ratingData.getTitle(), MapUtil.map("rank", ratingData.getRank(), "votes", ratingData.getVotes()));
     }
 }

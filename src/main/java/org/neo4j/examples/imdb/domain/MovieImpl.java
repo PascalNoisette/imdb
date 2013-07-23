@@ -20,10 +20,12 @@ package org.neo4j.examples.imdb.domain;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.Transaction;
 
 class MovieImpl implements Movie
 {
@@ -99,5 +101,28 @@ class MovieImpl implements Movie
     public String toString()
     {
         return (String) underlyingNode.getProperty( TITLE_PROPERTY );
+    }
+
+    @Override
+    public void addProperties(Map<String, ? extends Object> properties) {
+        Transaction tx = underlyingNode.getGraphDatabase().beginTx();
+        try {
+            for (Map.Entry<String, ? extends Object> en : properties.entrySet()) {
+                String key = en.getKey();
+                Object value = en.getValue();
+                underlyingNode.setProperty(key , value);
+            }
+            tx.success();
+        } catch (Exception e) {
+            tx.failure();
+        } finally {
+            tx.finish();
+        }
+    }
+
+    @Override
+    public String getProperty(String key) 
+    {
+        return underlyingNode.getProperty(key).toString();
     }
 }

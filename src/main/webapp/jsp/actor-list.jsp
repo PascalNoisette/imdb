@@ -4,7 +4,7 @@
 <title><c:out value="${model.movieTitle}" /> : IMDB powered by Neo4j</title>
 </head>
 <body>
-<h1><c:out value="${model.movieTitle}" /></h1>
+<h1><c:out value="${model.movieTitle}" /> (<c:out value="${model.movieRatings}" />/10)</h1>
 <h3>Actors</h3>
 <ul class="actors">
 	<c:forEach items="${model.actorInfo}" var="actorInfo">

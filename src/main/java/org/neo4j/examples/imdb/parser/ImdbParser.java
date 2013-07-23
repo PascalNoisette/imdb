@@ -118,6 +118,47 @@ public class ImdbParser
         reader.newMovies( buffer );
         return (movieCount.getCount() + " movies parsed and injected.");
     }
+    
+    
+    
+    /**
+     * Parsers a tab-separated movie rating list file, each line containing a movie
+     * title and the year the movie was released. The file can be .gz or .zip
+     * compressed, and must then have the corresponding file extension.
+     * @param file
+     *            name of movie list file
+     * @throws IOException
+     *             if unable to open the movie list file
+     */
+    public String parseRatings( final String file ) throws IOException
+    {
+        if ( file == null )
+        {
+            throw new IllegalArgumentException( "Null rating file" );
+        }
+        BufferedReader fileReader = getFileReader( file, "MOVIE RATINGS REPORT", 2);
+        String line = fileReader.readLine();
+        ProgressCounter ratingCount = new ProgressCounter("ratings");
+        
+        while ( line != null && !"".equals( line ))
+        {            
+            String[] tokens = line.split("  ");
+            String title = tokens[tokens.length-1].trim();
+            String rank = tokens[tokens.length-2].trim();  
+            String votes = tokens[tokens.length-3].trim();  
+            if (title.contains( "{" ) || title.startsWith( "\"" ) )
+            {
+                line = fileReader.readLine();
+                continue;
+            }
+            
+            reader.newRating(new RatingData( title, rank, votes));
+            ratingCount.increment();
+           
+            line = fileReader.readLine();
+        }
+        return (ratingCount.getCount() + " ratings parsed and injected.");
+    }
  
     /**
      * Parsers a tab-separated actors list file. A line begins with actor name

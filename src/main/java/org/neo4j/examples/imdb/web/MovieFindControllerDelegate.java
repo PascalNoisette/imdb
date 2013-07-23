@@ -64,6 +64,7 @@ public class MovieFindControllerDelegate implements FindControllerDelegate
         else
         {
             model.put( "movieTitle", movie.getTitle() );
+            model.put( "movieRatings",  movie.getProperty("rank") );
             final Collection<ActorInfo> actorInfo = new TreeSet<ActorInfo>();
             for ( Actor actor : movie.getActors() )
             {

@@ -18,6 +18,8 @@
  */
 package org.neo4j.examples.imdb.domain;
 
+import java.util.Map;
+
 public interface Movie
 {
     /**
@@ -45,10 +47,24 @@ public interface Movie
      *            year of movie
      */
     void setYear( int year );
+    
+    /**
+     * Set additional attribute to node
+     * @param Map
+     *            properties
+     */
+    void addProperties( Map<String, ? extends Object> properties );
 
     /**
      * Returns all actors that acted in this movie.
      * @return actors that acted in this movie
      */
     Iterable<Actor> getActors();
+
+    /**
+     * Return the property value value
+     * @param key
+     * @return String
+     */
+    public String getProperty(String key);
 }
