@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipInputStream;
+import org.graphipedia.dataimport.ProgressCounter;
 
 /**
  * A <code>ImdbParser</code> can parse the movie and actor/actress lists from
@@ -79,7 +80,7 @@ public class ImdbParser
         BufferedReader fileReader = getFileReader( file, MOVIES_MARKER,
             MOVIES_SKIPS );
         String line = fileReader.readLine();
-        int movieCount = 0;
+        ProgressCounter movieCount = new ProgressCounter("movies");
         while ( line != null )
         {
             // get rid of blank lines and TV shows
@@ -105,8 +106,8 @@ public class ImdbParser
                 }
                 final int year = Integer.parseInt( yearString );
                 buffer.add( new MovieData( title, year ) );
-                movieCount++;
-                if ( movieCount % BUFFER_SIZE == 0 )
+                movieCount.increment();
+                if ( movieCount.getCount() % BUFFER_SIZE == 0 )
                 {
                     reader.newMovies( buffer );
                     buffer.clear();
@@ -115,9 +116,9 @@ public class ImdbParser
             line = fileReader.readLine();
         }
         reader.newMovies( buffer );
-        return (movieCount + " movies parsed and injected.");
+        return (movieCount.getCount() + " movies parsed and injected.");
     }
-
+ 
     /**
      * Parsers a tab-separated actors list file. A line begins with actor name
      * then followed by a tab and a movie title the actor acted in. Additional
@@ -160,7 +161,7 @@ public class ImdbParser
         final List<ActorData> buffer = new LinkedList<ActorData>();
         final List<RoleData> movies = new ArrayList<RoleData>();
         int movieCount = 0;
-        int actorCount = 0;
+        ProgressCounter actorCount = new ProgressCounter("actors");
         while ( line != null )
         {
             // get rid of blank lines
@@ -179,7 +180,7 @@ public class ImdbParser
                     {
                         buffer.add( new ActorData( currentActor, movies
                             .toArray( new RoleData[movies.size()] ) ) );
-                        actorCount++;
+                        actorCount.increment();
                         movies.clear();
                     }
                     currentActor = actor;
@@ -234,7 +235,7 @@ public class ImdbParser
             line = fileReader.readLine();
         }
         reader.newActors( buffer );
-        return (actorCount + " added including " + movieCount + " characters parsed and injected.");
+        return (actorCount.getCount() + " added including " + movieCount + " characters parsed and injected.");
     }
 
     /**
