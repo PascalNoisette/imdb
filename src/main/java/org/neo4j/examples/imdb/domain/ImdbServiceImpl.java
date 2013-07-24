@@ -57,7 +57,7 @@ class ImdbServiceImpl implements ImdbService
 
     @Override
     public Person createPerson( final String name ) {
-         Person person = getActor(name);
+         Person person = getExactPerson(name);
          if (person == null) {
              person = _createPerson(name);
          }
@@ -77,7 +77,7 @@ class ImdbServiceImpl implements ImdbService
     @Override
     public Movie createMovie( final String title, final int year ) 
     {
-        Movie movie = getMovie(title);
+        Movie movie = getExactMovie(title);
         if (movie == null) {
             movie = _createMovie(title, year);
         }
@@ -127,6 +127,18 @@ class ImdbServiceImpl implements ImdbService
         {
             actorNode = searchEngine.searchActor( name );
         }
+        Person actor = null;
+        if ( actorNode != null )
+        {
+            actor = new PersonImpl( actorNode );
+        }
+        return actor;
+    }
+    
+    
+    public Person getExactPerson( final String name )
+    {
+        Node actorNode = getSingleNode(NAME_INDEX, name);
         Person actor = null;
         if ( actorNode != null )
         {
