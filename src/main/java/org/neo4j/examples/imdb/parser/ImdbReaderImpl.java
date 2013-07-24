@@ -63,7 +63,7 @@ class ImdbReaderImpl implements ImdbReader
         for ( RoleData movieRole : movieRoles )
         {
             final Movie movie = imdbService
-                .getExactMovie( movieRole.getTitle() );
+                .getMovie( movieRole.getTitle() );
             if ( movie != null )
             {
                 imdbService.createRole( actor, movie, movieRole.getRole(),  movieRole.getCharacter());

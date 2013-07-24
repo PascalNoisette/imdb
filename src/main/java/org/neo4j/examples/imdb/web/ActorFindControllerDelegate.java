@@ -51,7 +51,7 @@ public class ActorFindControllerDelegate implements FindControllerDelegate
         throws ServletException
     {
         final String name = ((ActorForm) command).getName();
-        final Person actor = imdbService.getActor( name );
+        final Person actor = imdbService.getPerson( name );
         populateModel( model, actor );
     }
 

@@ -53,26 +53,26 @@ public class ImdbSearchEngineImpl implements ImdbSearchEngine
     public void indexActor( Person actor )
     {
         index( actor.getName(), ((PersonImpl) actor).getUnderlyingNode(),
-            NAME_PART_INDEX, ImdbSearchRelTypes.PART_OF_NAME );
+            NAME_PART_INDEX );
     }
 
     @Override
     public void indexMovie( Movie movie )
     {
         index( movie.getTitle(), ((MovieImpl) movie).getUnderlyingNode(),
-            TITLE_PART_INDEX, ImdbSearchRelTypes.PART_OF_TITLE );
+            TITLE_PART_INDEX );
     }
 
     @Override
-    public Node searchActor( String name )
+    public IndexHits<Node> searchActor( String name )
     {
-        return searchSingle( name, NAME_PART_INDEX, ImdbSearchRelTypes.PART_OF_NAME );
+        return nodeIndex.get( name, NAME_PART_INDEX );
     }
 
     @Override
-    public Node searchMovie( String title )
+    public IndexHits<Node> searchMovie( String title )
     {
-        return searchSingle( title, TITLE_PART_INDEX, ImdbSearchRelTypes.PART_OF_TITLE );
+        return nodeIndex.get( title, TITLE_PART_INDEX );
     }
 
     private String[] splitSearchString( final String value )
@@ -80,111 +80,12 @@ public class ImdbSearchEngineImpl implements ImdbSearchEngine
         return value.toLowerCase( Locale.ENGLISH ).split( "[^\\w]+" );
     }
 
-    private Node getSingleNode(String key, String value)
-    {
-        IndexHits<Node> hits = nodeIndex.get( key, value );
-        for ( Node node : hits )
-        {
-            return node;
-        }
-        return null;
-    }
-
     private void index( final String value, final Node node,
-        final String partIndexName, final ImdbSearchRelTypes relType )
+        final String partIndexName )
     {
         for ( String part : splitSearchString( value ) )
         {
-            Node wordNode = getSingleNode(partIndexName, part);
-            if ( wordNode == null )
-            {
-                wordNode = graphDbService.createNode();
-                // not needed for the functionality
-                nodeIndex.add(wordNode, partIndexName, part);
-
-                wordNode.setProperty( WORD_PROPERTY, part );
-            }
-            wordNode.createRelationshipTo( node, relType );
-            wordNode.setProperty( COUNT_PROPERTY, ((Integer) wordNode
-                .getProperty( COUNT_PROPERTY, 0 )) + 1 );
+            nodeIndex.add(node, partIndexName, part);
         }
-    }
-
-    private Node searchSingle( final String value, final String indexName,
-        final ImdbSearchRelTypes wordRelType )
-    {
-        // get the words in the search
-        final List<Node> wordList = findSearchWords( value, indexName );
-        if ( wordList.isEmpty() )
-        {
-            return null;
-        }
-        final Node startNode = wordList.remove( 0 );
-        // set up a match to use if everything else fails
-        Node match = startNode.getRelationships( wordRelType ).iterator()
-            .next().getEndNode();
-        // check if there is only one node in the list
-        if ( wordList.isEmpty() )
-        {
-            return match;
-        }
-        int bestCount = 0;
-        final int listSize = wordList.size();
-        for ( Relationship targetRel : startNode.getRelationships( wordRelType ) )
-        {
-            Node targetNode = targetRel.getEndNode();
-            int hitCount = 0;
-            for ( Relationship wordRel : targetNode
-                .getRelationships( wordRelType ) )
-            {
-                if ( wordList.contains( wordRel.getStartNode() ) )
-                {
-                    if ( ++hitCount == listSize )
-                    {
-                        return targetNode;
-                    }
-                }
-            }
-            if ( hitCount > bestCount )
-            {
-                match = targetNode;
-                bestCount = hitCount;
-            }
-        }
-        return match;
-    }
-
-    private List<Node> findSearchWords( final String userInput,
-        final String partIndexName )
-    {
-        final List<Node> wordList = new ArrayList<Node>();
-        // prepare search terms
-        for ( String part : splitSearchString( userInput ) )
-        {
-            Node wordNode = getSingleNode(partIndexName, part);
-            if ( wordNode == null || !wordNode.hasRelationship()
-                || wordList.contains( wordNode ) )
-            {
-                continue;
-            }
-            wordList.add( wordNode );
-        }
-        if ( wordList.isEmpty() )
-        {
-            return Collections.emptyList();
-        }
-        // sort words according to the number of relationships (ascending)
-        Collections.sort( wordList, new Comparator<Node>()
-        {
-            @Override
-            public int compare( final Node left, final Node right )
-            {
-                int leftCount = (Integer) left.getProperty( COUNT_PROPERTY, 0 );
-                int rightCount = (Integer) right
-                    .getProperty( COUNT_PROPERTY, 0 );
-                return leftCount - rightCount;
-            }
-        } );
-        return wordList;
     }
 }

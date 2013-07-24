@@ -52,15 +52,15 @@ public interface ImdbService
      */
     Role createRole( final Person actor, final Movie movie,
         final RelTypes roleName, final String characterName );
-
-    /**
+ 
+     /**
      * Returns the actor with the given <code>name</code> or <code>null</code>
      * if not found.
      * @param name
      *            name of actor
      * @return actor or <code>null</code> if not found
      */
-    Person getActor( String name );
+    Person getPerson( final String name );
 
     /**
      * Return the movie with given <code>title</code> or <code>null</code> if
@@ -71,8 +71,6 @@ public interface ImdbService
      */
     Movie getMovie( String title );
     
-    Movie getExactMovie( String title );
-
     /**
      * Returns a list with first element {@link Actor} followed by {@link Movie}
      * ending with an {@link Actor}. The list is one of the shortest paths

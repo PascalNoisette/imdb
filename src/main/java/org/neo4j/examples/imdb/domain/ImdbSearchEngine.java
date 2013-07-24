@@ -19,6 +19,7 @@
 package org.neo4j.examples.imdb.domain;
 
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.index.IndexHits;
 
 public interface ImdbSearchEngine
 {
@@ -26,7 +27,7 @@ public interface ImdbSearchEngine
 
     void indexMovie( Movie movie );
 
-    Node searchActor( String name );
+    IndexHits<Node> searchActor( String name );
 
-    Node searchMovie( String title );
+    IndexHits<Node> searchMovie( String title );
 }
