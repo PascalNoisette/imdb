@@ -56,7 +56,15 @@ class ImdbServiceImpl implements ImdbService
     }
 
     @Override
-    public Person createPerson( final String name )
+    public Person createPerson( final String name ) {
+         Person person = getActor(name);
+         if (person == null) {
+             person = _createPerson(name);
+         }
+         return person;
+    }
+
+    private Person _createPerson( final String name )
     {
         final Node actorNode = graphDbService.createNode();
         final Person actor = new PersonImpl( actorNode );
@@ -67,7 +75,16 @@ class ImdbServiceImpl implements ImdbService
     }
 
     @Override
-    public Movie createMovie( final String title, final int year )
+    public Movie createMovie( final String title, final int year ) 
+    {
+        Movie movie = getMovie(title);
+        if (movie == null) {
+            movie = _createMovie(title, year);
+        }
+        return movie;
+    }
+    
+    private Movie _createMovie( final String title, final int year )
     {
         final Node movieNode = graphDbService.createNode();
         final Movie movie = new MovieImpl( movieNode );
