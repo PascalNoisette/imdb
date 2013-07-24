@@ -16,3 +16,13 @@ mvn jetty:stop
 If you inspect the graph using Neoclipse,
 node-icons are found in
 src/test/resources/icons
+
+Run statistics on the lattest IMDB dump files :
+- 1 456 929 actors (1428 actors/s)
+- 799 795 actreses (1204 actors/s)
+- 273 833 directors (1396 directors/s)
+- 133 533 composers (1162 composers/s)
+- 463 274 producers (1535 producers/s)
+- 347 432 writers (1570 writers/s)
+- 284 824 ratings (451 ratings/s)
+- 698 090 genres (495 genres/s)
