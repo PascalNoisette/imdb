@@ -69,13 +69,14 @@ class MovieImpl implements Movie
     }
 
     @Override
-    public Iterable<Person> getPersonsByType(RelTypes type)
+    public Iterable<Person> getPersons()
     {
         final List<Person> actors = new LinkedList<Person>();
-        for ( Relationship rel : underlyingNode.getRelationships(
-            type, Direction.INCOMING ) )
+        for ( Relationship rel : underlyingNode.getRelationships( Direction.INCOMING ) )
         {
-            actors.add( new PersonImpl( rel.getStartNode() ) );
+            if (rel.getStartNode().hasProperty("name")) {
+                actors.add( new PersonImpl( rel.getStartNode() ) );
+            }
         }
         return actors;
     }

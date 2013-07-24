@@ -229,6 +229,7 @@ public class ImdbParser
                         actorCount.increment();
                         movies.clear();
                     }
+                    System.out.println("ac " + actor);
                     currentActor = actor;
                 }
                 String title = line.substring( actorSep ).trim();
@@ -270,6 +271,7 @@ public class ImdbParser
                         title = title.substring( 0, spaces ).trim();
                     }
                 }
+                System.out.println("mo " + title);
                 movies.add( new RoleData( title, batchName, character ) );
                 movieCount++;
                 if ( movieCount % BUFFER_SIZE == 0 )
@@ -333,7 +335,16 @@ public class ImdbParser
     public Object parseDirectors(String filename) throws IOException {
         return parsePersonFile(getFileReader(filename, "THE DIRECTORS LIST", 4 ), RelTypes.DIRECTOR);
     }
-    
-    
 
+    public Object parseComposers(String filename) throws IOException {
+        return parsePersonFile(getFileReader(filename, "THE COMPOSERS LIST", 4 ), RelTypes.COMPOSER);
+    }
+
+    public Object parseProducers(String filename) throws IOException {
+        return parsePersonFile(getFileReader(filename, "THE PRODUCERS LIST", 4 ), RelTypes.PRODUCER);
+    }
+
+    public Object parseWriters(String filename) throws IOException {
+        return parsePersonFile(getFileReader(filename, "THE WRITERS LIST", 4 ), RelTypes.WRITER);
+    }
 }

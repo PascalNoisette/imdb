@@ -64,8 +64,8 @@ public interface Movie
     public String getProperty(String key);
 
   /**
-     * Returns all directors that make this movie.
+     * Returns all person related to this movie.
      * @return list
      */
-    public Iterable<Person> getPersonsByType(RelTypes type);
+    public Iterable<Person> getPersons();
 }
