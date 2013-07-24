@@ -58,7 +58,7 @@ class PersonImpl implements Person
     {
         final List<Movie> movies = new LinkedList<Movie>();
         for ( Relationship rel : underlyingNode.getRelationships(
-            RelTypes.ACTOR, Direction.OUTGOING ) )
+             Direction.OUTGOING ) )
         {
             movies.add( new MovieImpl( rel.getEndNode() ) );
         }
@@ -70,7 +70,7 @@ class PersonImpl implements Person
     {
         final Node movieNode = ((MovieImpl) inMovie).getUnderlyingNode();
         for ( Relationship rel : underlyingNode.getRelationships(
-            RelTypes.ACTOR, Direction.OUTGOING ) )
+             Direction.OUTGOING ) )
         {
             if ( rel.getEndNode().equals( movieNode ) )
             {
@@ -101,10 +101,5 @@ class PersonImpl implements Person
     public String toString()
     {
         return "Actor '" + this.getName() + "'";
-    }
-
-    @Override
-    public Iterable<Movie> getMovies() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

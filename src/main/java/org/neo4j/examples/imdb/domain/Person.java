@@ -34,20 +34,14 @@ public interface Person
     void setName( String name );
 
     /**
-     * Returns all movies this person acted in
+     * Returns all movies this person is related to.
      * @return movies as actor
      */
     Iterable<Movie> getRoles();
     
-     /**
-     * Returns all movies this person is related to.
-     * @return all movies
-     */
-    Iterable<Movie> getMovies();
 
     /**
-     * Returns the specific role an actor had in a movie or null if actor didn't
-     * have a role in the movie.
+     * Returns all movies this person is related to.
      * @param inMovie
      *            the movie to get role for
      * @return the role or null

@@ -19,6 +19,9 @@
                             as <em><c:out
                             value="${peopleInfo.character}" /></em>
                         </c:if>
+                        <c:if test="${peopleInfo.character==null}">
+                            ${fn:toLowerCase(peopleInfo.role)}
+                        </c:if>
                 </li>
 	</c:forEach>
 </ul>
