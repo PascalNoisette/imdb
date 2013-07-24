@@ -44,38 +44,38 @@ public class ImdbSetupControllerDelegate implements SetupControllerDelegate
         StringBuffer message = new StringBuffer( 200 );
         try
         {
-            System.out.println("Parsing movies");
+            System.out.println("\nParsing movies");
             message.append(
                 parser.parseMovies( IMDB_DATADIR + "movies.list.gz" ) ).append(
                 '\n' );
             
-            System.out.println("Parsing actors");
+            System.out.println("\nParsing actors");
             message.append(
                 parser.parseActors( IMDB_DATADIR + "actors.list.gz",
                     IMDB_DATADIR + "actresses.list.gz" ) ).append( '\n' );
             
-            System.out.println("Parsing director");
+            System.out.println("\nParsing director");
             message.append(
                 parser.parseDirectors( IMDB_DATADIR + "directors.list.gz"  )).append( '\n' );
             
-            System.out.println("Parsing composers");
+            System.out.println("\nParsing composers");
             message.append(
                 parser.parseComposers( IMDB_DATADIR + "composers.list.gz"  )).append( '\n' );
             
-            System.out.println("Parsing producers");
+            System.out.println("\nParsing producers");
             message.append(
                 parser.parseProducers( IMDB_DATADIR + "producers.list.gz"  )).append( '\n' );
             
-            System.out.println("Parsing writers");
+            System.out.println("\nParsing writers");
             message.append(
                 parser.parseWriters( IMDB_DATADIR + "writers.list.gz"  )).append( '\n' );
             
-            System.out.println("Parsing ratings");
+            System.out.println("\nParsing ratings");
             message.append(
                 parser.parseRatings(IMDB_DATADIR + "ratings.list.gz" ) ).append(
                 '\n' );
             
-            System.out.println("Parsing genres");
+            System.out.println("\nParsing genres");
             message.append(
                 parser.parseGenres(IMDB_DATADIR + "genres.list.gz" ) ).append(
                 '\n' );
