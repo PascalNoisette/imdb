@@ -76,4 +76,11 @@ class ImdbReaderImpl implements ImdbReader
     {
         imdbService.addPropertiesToMovie(ratingData.getTitle(), MapUtil.map("rank", ratingData.getRank(), "votes", ratingData.getVotes()));
     }
+    
+    
+    @Override
+    public void newGenre(GenreData genreData) 
+    {
+        imdbService.addPropertiesToMovie(genreData.getTitle(), MapUtil.map("genre", genreData.getGenre()));
+    }
 }

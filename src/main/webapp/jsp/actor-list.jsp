@@ -8,6 +8,7 @@
 <body>
 <h1><c:out value="${model.movieTitle}" /> <c:if test="${model.movieRatings!=null && model.movieRatings!=\"\"}">(<c:out value="${model.movieRatings}" />/10)</c:if></h1>
 <h3>Cast</h3>
+${model.movieGenre}
 <ul class="actors">
 	<c:forEach items="${model.peopleInfo}" var="peopleInfo">
 		<c:url value="actor.html" var="actorURL">

@@ -229,7 +229,6 @@ public class ImdbParser
                         actorCount.increment();
                         movies.clear();
                     }
-                    System.out.println("ac " + actor);
                     currentActor = actor;
                 }
                 String title = line.substring( actorSep ).trim();
@@ -271,7 +270,6 @@ public class ImdbParser
                         title = title.substring( 0, spaces ).trim();
                     }
                 }
-                System.out.println("mo " + title);
                 movies.add( new RoleData( title, batchName, character ) );
                 movieCount++;
                 if ( movieCount % BUFFER_SIZE == 0 )
@@ -346,5 +344,35 @@ public class ImdbParser
 
     public Object parseWriters(String filename) throws IOException {
         return parsePersonFile(getFileReader(filename, "THE WRITERS LIST", 4 ), RelTypes.WRITER);
+    }
+
+
+    public Object parseGenres(String filename) throws IOException  {
+        BufferedReader fileReader = getFileReader(filename, "8: THE GENRES LIST", 2 );
+        String line = fileReader.readLine();
+        ProgressCounter genreCount = new ProgressCounter("genres");
+        
+        while ( line != null && !"".equals( line ))
+        {            
+            String[] tokens = line.split("\t\t\t\t\t");
+            if (tokens.length != 2)
+            {
+                line = fileReader.readLine();
+                continue;
+            }
+            String title = tokens[0].trim();
+            String genre = tokens[1].trim();
+            if (title.contains( "{" ) || title.startsWith( "\"" ) )
+            {
+                line = fileReader.readLine();
+                continue;
+            }
+            
+            reader.newGenre(new GenreData( title, genre));
+            genreCount.increment();
+           
+            line = fileReader.readLine();
+        }
+        return (genreCount.getCount() + " genres parsed and injected.");
     }
 }

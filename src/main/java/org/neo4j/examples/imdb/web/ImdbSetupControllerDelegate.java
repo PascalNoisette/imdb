@@ -44,22 +44,40 @@ public class ImdbSetupControllerDelegate implements SetupControllerDelegate
         StringBuffer message = new StringBuffer( 200 );
         try
         {
+            System.out.println("Parsing movies");
             message.append(
                 parser.parseMovies( IMDB_DATADIR + "movies.list.gz" ) ).append(
                 '\n' );
+            
+            System.out.println("Parsing actors");
             message.append(
                 parser.parseActors( IMDB_DATADIR + "actors.list.gz",
                     IMDB_DATADIR + "actresses.list.gz" ) ).append( '\n' );
-           message.append(
+            
+            System.out.println("Parsing director");
+            message.append(
                 parser.parseDirectors( IMDB_DATADIR + "directors.list.gz"  )).append( '\n' );
-           message.append(
+            
+            System.out.println("Parsing composers");
+            message.append(
                 parser.parseComposers( IMDB_DATADIR + "composers.list.gz"  )).append( '\n' );
-           message.append(
+            
+            System.out.println("Parsing producers");
+            message.append(
                 parser.parseProducers( IMDB_DATADIR + "producers.list.gz"  )).append( '\n' );
-           message.append(
+            
+            System.out.println("Parsing writers");
+            message.append(
                 parser.parseWriters( IMDB_DATADIR + "writers.list.gz"  )).append( '\n' );
-           message.append(
+            
+            System.out.println("Parsing ratings");
+            message.append(
                 parser.parseRatings(IMDB_DATADIR + "ratings.list.gz" ) ).append(
+                '\n' );
+            
+            System.out.println("Parsing genres");
+            message.append(
+                parser.parseGenres(IMDB_DATADIR + "genres.list.gz" ) ).append(
                 '\n' );
             imdbService.setupReferenceRelationship();
         }

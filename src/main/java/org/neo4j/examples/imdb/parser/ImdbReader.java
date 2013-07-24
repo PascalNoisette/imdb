@@ -47,4 +47,11 @@ public interface ImdbReader
      * @param ratingData 
      */
     void newRating(RatingData ratingData);
+
+    /**
+     * Import movie genre
+     * 
+     * @param genreData 
+     */
+    void newGenre(GenreData genreData);
 }
