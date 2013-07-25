@@ -159,7 +159,7 @@ class ImdbServiceImpl implements ImdbService
     @Transactional
     public void setupReferenceRelationship()
     {
-        Node baconNode = getSingleNode( "name", "Bacon, Kevin" );
+        Node baconNode = getSingleNode( "name", "Bacon, Kevin (I)" );
         if ( baconNode == null )
         {
             throw new NoSuchElementException(
