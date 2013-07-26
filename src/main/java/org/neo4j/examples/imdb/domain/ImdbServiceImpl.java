@@ -18,19 +18,23 @@
  */
 package org.neo4j.examples.imdb.domain;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import org.neo4j.graphalgo.GraphAlgoFactory;
+import org.neo4j.graphalgo.PathFinder;
 
-import org.neo4j.examples.imdb.util.PathFinder;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Path;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.IndexHits;
 import org.neo4j.helpers.collection.MapUtil;
+import org.neo4j.kernel.Traversal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +43,6 @@ class ImdbServiceImpl implements ImdbService
     private GraphDatabaseService graphDbService;
     private Index<Node> nodeIndex;
 
-    @Autowired
-    private PathFinder pathFinder;
     @Autowired
     private ImdbSearchEngine searchEngine;
 
@@ -188,17 +190,18 @@ class ImdbServiceImpl implements ImdbService
                 "Unable to find Kevin Bacon actor" );
         }
         final Node actorNode = ((PersonImpl) actor).getUnderlyingNode();
-        final List<Node> list = pathFinder.shortestPath( actorNode, baconNode,
-            RelTypes.ACTOR );
+        PathFinder<Path> finder = GraphAlgoFactory.shortestPath(
+        Traversal.expanderForTypes( RelTypes.ACTOR, Direction.OUTGOING ), 15 );
+        Iterator<Node> list = finder.findSinglePath( actorNode, baconNode ).nodes().iterator();
         return convertNodesToActorsAndMovies( list );
     }
 
-    private List<?> convertNodesToActorsAndMovies( final List<Node> list )
+    private List<?> convertNodesToActorsAndMovies( final Iterator<Node> list)
     {
         final List<Object> actorAndMovieList = new LinkedList<Object>();
         int mod = 0;
-        for ( Node node : list )
-        {
+        while(list.hasNext()) {
+            Node node = list.next();
             if ( mod++ % 2 == 0 )
             {
                 actorAndMovieList.add( new PersonImpl( node ) );

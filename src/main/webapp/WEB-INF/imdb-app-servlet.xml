@@ -36,7 +36,6 @@
 
 	<bean id="imdbService" class="org.neo4j.examples.imdb.domain.ImdbServiceImpl" />
 	<bean id="searchEngine" class="org.neo4j.examples.imdb.domain.ImdbSearchEngineImpl" />
-	<bean id="pathFinder" class="org.neo4j.examples.imdb.util.SimplePathFinder" />
 	<bean id="imdbReader" class="org.neo4j.examples.imdb.parser.ImdbReaderImpl" />
 
 	<!-- Web -->
@@ -79,7 +78,9 @@
 		<property name="transactionManager" ref="neo4jTransactionManagerService" />
 		<property name="userTransaction" ref="neo4jUserTransactionService" />
 	</bean>
-	<bean id="neo4jTransactionManagerService" class="org.neo4j.kernel.impl.transaction.SpringTransactionManager" />
+	<bean id="neo4jTransactionManagerService" class="org.neo4j.kernel.impl.transaction.SpringTransactionManager">
+            <constructor-arg index="0" ref="graphDbService" />
+        </bean>
 	<bean id="neo4jUserTransactionService" class="org.neo4j.kernel.impl.transaction.UserTransactionImpl">
 		<constructor-arg index="0" ref="graphDbService" />
 	</bean>
