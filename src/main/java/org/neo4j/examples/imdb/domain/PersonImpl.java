@@ -102,4 +102,9 @@ class PersonImpl implements Person
     {
         return "Actor '" + this.getName() + "'";
     }
+    
+    @Override
+    public long getId() {
+        return underlyingNode.getId();
+    }
 }

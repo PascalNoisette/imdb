@@ -129,4 +129,9 @@ class MovieImpl implements Movie
         }
         return "";
     }
+
+    @Override
+    public long getId() {
+        return underlyingNode.getId();
+    }
 }

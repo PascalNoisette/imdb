@@ -22,7 +22,7 @@ import java.io.IOException;
 
 import org.neo4j.examples.imdb.domain.ImdbService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 public class Setup
@@ -37,7 +37,8 @@ public class Setup
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        ApplicationContext context = new FileSystemXmlApplicationContext(new String[] {"src/main/webapp/WEB-INF/imdb-app-servlet.xml"});
+        AbstractApplicationContext context = new FileSystemXmlApplicationContext(new String[] {"src/main/webapp/WEB-INF/imdb-setup-cmdline.xml"});
+        context.registerShutdownHook();
     	Setup selfInstance = (Setup)context.getBean("setup");
         selfInstance.run();
     }

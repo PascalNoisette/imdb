@@ -68,4 +68,10 @@ public interface Movie
      * @return list
      */
     public Iterable<Person> getPersons();
+
+     /**
+     * Returns the id of this movie.
+     * @return id of this movie.
+     */
+    public long getId();
 }

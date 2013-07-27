@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to Neo Technology under one or more contributor
+    license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright
+    ownership. Neo Technology licenses this file to you under
+    the Apache License, Version 2.0 (the "License"); you may
+    not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied. See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+        xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+	<context:annotation-config />
+
+	<!-- Beans -->
+        <bean id="batchInserter" class="org.neo4j.unsafe.batchinsert.BatchInserters" 
+              scope="singleton"
+              factory-method="inserter" 
+              destroy-method="shutdown">
+		<constructor-arg index="0" value="target/neo4j-db" />
+	</bean>
+        <bean id="indexProvider" class="org.neo4j.unsafe.batchinsert.LuceneBatchInserterIndexProvider" 
+              scope="singleton"
+              destroy-method="shutdown">
+		<constructor-arg index="0" ref="batchInserter" />
+	</bean>
+        
+        <bean id="batchIndexerExact" factory-bean="indexProvider"
+              scope="singleton"
+              factory-method="nodeIndex" >
+		<constructor-arg index="0" value="exact" />
+                <constructor-arg index="1">
+                    <util:map>
+                        <entry key="type" value="exact"/>
+                        <entry key="to_lower_case" value="false"/>
+                    </util:map>
+                </constructor-arg>
+	</bean>
+        
+        <bean id="batchIndexerSearch" factory-bean="indexProvider"
+              scope="singleton"
+              factory-method="nodeIndex" >
+		<constructor-arg index="0" value="exact" />
+                <constructor-arg index="1">
+                    <util:map>
+                        <entry key="provider" value="lucene"/>
+                        <entry key="type" value="fulltext"/>
+                    </util:map>
+                </constructor-arg>
+	</bean>
+
+	<bean id="imdbService" class="org.neo4j.examples.imdb.domain.ImdbServiceBatchImpl"/>
+	<bean id="searchEngine" class="org.neo4j.examples.imdb.domain.ImdbSearchEngineBatchImpl" />
+	<bean id="imdbReader" class="org.neo4j.examples.imdb.parser.ImdbReaderImpl" />
+
+        <bean id="setup" class="org.neo4j.examples.imdb.parser.Setup" />
+</beans>

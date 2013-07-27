@@ -24,11 +24,17 @@ class RoleImpl implements Role
 {
     private static final String CHARACTER_NAME_PROPERTY = "character_name";
 
-    private final Relationship underlyingRel;
+    private Relationship underlyingRel = null;
+
+    private long underlyingRelId = -1;
 
     RoleImpl( final Relationship rel )
     {
         this.underlyingRel = rel;
+    }
+
+    RoleImpl(long id) {
+        this.underlyingRelId = id;
     }
 
     Relationship getUnderlyingRelationship()

@@ -47,4 +47,10 @@ public interface Person
      * @return the role or null
      */
     Role getRole( Movie inMovie );
+
+     /**
+     * Returns the id of this person.
+     * @return id of this person.
+     */
+    public long getId();
 }
