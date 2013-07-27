@@ -21,6 +21,7 @@ package org.neo4j.examples.imdb.domain;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.index.IndexHits;
 import org.neo4j.helpers.collection.MapUtil;
+import org.neo4j.index.lucene.ValueContext;
 import org.neo4j.unsafe.batchinsert.BatchInserterIndex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -36,13 +37,20 @@ public class ImdbSearchEngineBatchImpl implements ImdbSearchEngine
     @Override
     public void indexActor( Person actor )
     {
-        batchIndexerSearch.add(actor.getId(), MapUtil.map(NAME_INDEX, actor.getName()));
+        indexProperty(actor.getId(), NAME_INDEX,  actor.getName());
     }
 
     @Override
     public void indexMovie( Movie movie )
     {
-        batchIndexerSearch.add(movie.getId(), MapUtil.map(TITLE_INDEX, movie.getTitle()));
+        indexProperty(movie.getId(), TITLE_INDEX,  movie.getTitle());
+        indexProperty(movie.getId(), "year", movie.getYear());
+    }
+    
+    @Override
+    public void indexProperty(long nodeId, String key, Object value)
+    {
+        batchIndexerSearch.add(nodeId, MapUtil.map(key, value));
     }
 
     @Override

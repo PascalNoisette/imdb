@@ -29,6 +29,7 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.IndexHits;
+import org.neo4j.index.lucene.ValueContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ImdbSearchEngineImpl implements ImdbSearchEngine
@@ -87,5 +88,10 @@ public class ImdbSearchEngineImpl implements ImdbSearchEngine
         {
             nodeIndex.add(node, partIndexName, part);
         }
+    }
+
+    @Override
+    public void indexProperty(long nodeId, String key, Object value) {
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 }

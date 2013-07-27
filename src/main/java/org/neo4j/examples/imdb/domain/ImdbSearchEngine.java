@@ -20,6 +20,7 @@ package org.neo4j.examples.imdb.domain;
 
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.index.IndexHits;
+import org.neo4j.index.lucene.ValueContext;
 
 public interface ImdbSearchEngine
 {
@@ -30,4 +31,6 @@ public interface ImdbSearchEngine
     IndexHits<Node> searchActor( String name );
 
     IndexHits<Node> searchMovie( String title );
+    
+    void indexProperty(long nodeId, String key, Object value);
 }

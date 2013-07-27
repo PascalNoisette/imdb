@@ -83,6 +83,7 @@ class ImdbServiceBatchImpl implements ImdbService
     {
         final Movie movie = new MovieBatchImpl( batchInserter.createNode(MapUtil.map("title", title, "year", year ))  );
         movie.setTitle(title);
+        movie.setYear(year);
         inMemoryIndex.get(TITLE_INDEX).put(title, movie.getId());
         searchEngine.indexMovie( movie );
         batchIndexerExact.add(movie.getId(), MapUtil.map(TITLE_INDEX, title));
@@ -177,6 +178,7 @@ class ImdbServiceBatchImpl implements ImdbService
                 String key = en.getKey();
                 Object value = en.getValue();
                 batchInserter.setNodeProperty(movie.getId(), key, value);
+                searchEngine.indexProperty(movie.getId(), key, value);
             }
         }
     }
