@@ -38,9 +38,9 @@ public class ProgressCounter {
     public synchronized void increment() {
         count++;
         if (count % BIG_STEP == 0) {
-            long timeSpent = System.currentTimeMillis() - startTime;
+            long timeSpent = Math.max(1, System.currentTimeMillis() - startTime);
             System.out.print(". "+ count / THOUSAND +"k");
-            System.out.println(" (" + (count/(timeSpent/1000)) +  " " + name + " per second)");
+            System.out.println(" (" + (count*1000/timeSpent) +  " " + name + "/s)");
         } else if (count % SMALL_STEP == 0) {
             System.out.print(".");
         }
