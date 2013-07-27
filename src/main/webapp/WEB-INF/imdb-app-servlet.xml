@@ -70,6 +70,7 @@
 		<property name="successView" value="setup-message" />
 	</bean>
 	<bean id="imdbSetup" class="org.neo4j.examples.imdb.web.ImdbSetupControllerDelegate" />
+	<bean id="setup" class="org.neo4j.examples.imdb.parser.Setup" />
 
 	<!-- Transactions -->
 	<tx:annotation-driven />

@@ -18,74 +18,22 @@
  */
 package org.neo4j.examples.imdb.web;
 
-import java.io.IOException;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import org.neo4j.examples.imdb.parser.Setup;
 
-import org.neo4j.examples.imdb.domain.ImdbService;
-import org.neo4j.examples.imdb.parser.ImdbParser;
-import org.neo4j.examples.imdb.parser.ImdbReader;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ImdbSetupControllerDelegate implements SetupControllerDelegate
 {
-    private static final String IMDB_DATADIR = "target/classes/data/";
     @Autowired
-    private ImdbReader imdbReader;
-    @Autowired
-    private ImdbService imdbService;
+    private Setup setup;
 
     @Override
     public void getModel( final Object command, final Map<String,Object> model )
         throws ServletException
     {
-        final ImdbParser parser = new ImdbParser( imdbReader );
-        StringBuffer message = new StringBuffer( 200 );
-        try
-        {
-            System.out.println("\nParsing movies");
-            message.append(
-                parser.parseMovies( IMDB_DATADIR + "movies.list.gz" ) ).append(
-                '\n' );
-            
-            System.out.println("\nParsing actors");
-            message.append(
-                parser.parseActors( IMDB_DATADIR + "actors.list.gz",
-                    IMDB_DATADIR + "actresses.list.gz" ) ).append( '\n' );
-            
-            System.out.println("\nParsing director");
-            message.append(
-                parser.parseDirectors( IMDB_DATADIR + "directors.list.gz"  )).append( '\n' );
-            
-            System.out.println("\nParsing composers");
-            message.append(
-                parser.parseComposers( IMDB_DATADIR + "composers.list.gz"  )).append( '\n' );
-            
-            System.out.println("\nParsing producers");
-            message.append(
-                parser.parseProducers( IMDB_DATADIR + "producers.list.gz"  )).append( '\n' );
-            
-            System.out.println("\nParsing writers");
-            message.append(
-                parser.parseWriters( IMDB_DATADIR + "writers.list.gz"  )).append( '\n' );
-            
-            System.out.println("\nParsing ratings");
-            message.append(
-                parser.parseRatings(IMDB_DATADIR + "ratings.list.gz" ) ).append(
-                '\n' );
-            
-            System.out.println("\nParsing genres");
-            message.append(
-                parser.parseGenres(IMDB_DATADIR + "genres.list.gz" ) ).append(
-                '\n' );
-            imdbService.setupReferenceRelationship();
-        }
-        catch ( IOException e )
-        {
-            message.append( "Something went wrong during the setup process:\n" )
-                .append( e.getMessage() );
-        }
-        model.put( "setupMessage", message.toString() );
+        model.put( "setupMessage", setup.run() );
     }
 }
