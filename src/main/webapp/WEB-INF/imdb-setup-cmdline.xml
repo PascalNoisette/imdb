@@ -67,6 +67,18 @@
                 </constructor-arg>
 	</bean>
 
+        <bean id="batchIndexerFacets" factory-bean="indexProvider"
+              scope="singleton"
+              factory-method="nodeIndex" >
+		<constructor-arg index="0" value="layer" />
+                <constructor-arg index="1">
+                    <util:map>
+                        <entry key="provider" value="lucene"/>
+                        <entry key="type" value="fulltext"/>
+                    </util:map>
+                </constructor-arg>
+	</bean>
+
 	<bean id="imdbService" class="org.neo4j.examples.imdb.domain.ImdbServiceBatchImpl"/>
 	<bean id="searchEngine" class="org.neo4j.examples.imdb.domain.ImdbSearchEngineBatchImpl" />
 	<bean id="imdbReader" class="org.neo4j.examples.imdb.parser.ImdbReaderImpl" />

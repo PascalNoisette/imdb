@@ -22,5 +22,5 @@ import org.neo4j.graphdb.RelationshipType;
 
 public enum RelTypes implements RelationshipType
 {
-    ACTOR, IMDB, DIRECTOR, COMPOSER, PRODUCER, WRITER, CINEMATOGRAPHER
+    ACTOR, IMDB, DIRECTOR, COMPOSER, PRODUCER, WRITER, CINEMATOGRAPHER, FACET, VALUE, CATEGORY
 }
