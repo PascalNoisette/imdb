@@ -378,14 +378,18 @@ public class ImdbParser
 
     Object parseKeywords(String filename) throws IOException {
         BufferedReader fileReader = getFileReader(filename, "8: THE KEYWORDS LIST", 2 );
+        return parseAtributeMultiple(fileReader, "keyword");
+    }
+    
+    Object parseAtributeMultiple(BufferedReader fileReader, String attributeName) throws IOException {
         String line = fileReader.readLine();
-        ProgressCounter keywordsCount = new ProgressCounter("keywords");
+        ProgressCounter keywordsCount = new ProgressCounter(attributeName);
         final List<String> keywords = new LinkedList<String>();
         String previousTitle = null;
         
         while ( line != null && !"".equals( line ))
         {
-            String[] tokens = line.split("\t\t\t\t\t");
+            String[] tokens = line.split("\t\t\t\t");
             if (tokens.length != 2)
             {
                 line = fileReader.readLine();
@@ -405,7 +409,7 @@ public class ImdbParser
             }
             
             if (!title.equals(previousTitle)) {
-                reader.newKeywords(previousTitle, keywords);
+                reader.newAtributeMultiple(previousTitle, attributeName, keywords);
                 keywords.clear();
                 previousTitle = title; 
             }
@@ -415,12 +419,22 @@ public class ImdbParser
             line = fileReader.readLine();
         }
         if (!keywords.isEmpty()) {
-            reader.newKeywords(previousTitle, keywords);
+            reader.newAtributeMultiple(previousTitle, attributeName, keywords);
         }
-        return (keywordsCount.getCount() + " genres parsed and injected.");
+        return (keywordsCount.getCount() + " " + attributeName + " parsed and injected.");
     }
 
     Object parseCinematographer(String filename) throws IOException {
         return parsePersonFile(getFileReader(filename, "THE CINEMATOGRAPHERS LIST", 4 ), RelTypes.CINEMATOGRAPHER);
+    }
+
+    Object parseCountries(String filename) throws IOException  {
+        BufferedReader fileReader = getFileReader(filename, "COUNTRIES LIST", 2 );
+        return parseAtributeMultiple(fileReader, "country");
+    }
+
+    Object parseLanguages(String filename) throws IOException  {
+        BufferedReader fileReader = getFileReader(filename, "LANGUAGE LIST", 2 );
+        return parseAtributeMultiple(fileReader, "language");
     }
 }

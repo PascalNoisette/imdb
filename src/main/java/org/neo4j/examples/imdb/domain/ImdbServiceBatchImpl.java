@@ -185,20 +185,20 @@ class ImdbServiceBatchImpl implements ImdbService
     }
 
     @Override
-    public void addKeywordsToMovie(String title, List<String> keywords) {
+    public void addAtributeMultipleToMovie(String title, String attributeName, List<String> keywords) {
         Movie movie = getMovie(title);
         if (movie != null) {
             StringBuilder buffer=new StringBuilder();
             Iterator iter = keywords.iterator();
             while (iter.hasNext()) {
                 String keyword = (String) iter.next();
-                searchEngine.indexProperty(movie.getId(), "keyword", keyword);
+                searchEngine.indexProperty(movie.getId(), attributeName, keyword);
                 buffer.append(keyword);
                 if (iter.hasNext()) {
                     buffer.append(", ");
                 }
             }
-            addPropertiesToMovie(title, MapUtil.map("keywords", buffer.toString()));
+            addPropertiesToMovie(title, MapUtil.map(attributeName, buffer.toString()));
         }
     }
 }

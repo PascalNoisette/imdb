@@ -85,7 +85,7 @@ class ImdbReaderImpl implements ImdbReader
     }
 
     @Override
-    public void newKeywords(String title, List<String> keywords) {
-        imdbService.addKeywordsToMovie(title, keywords);
+    public void newAtributeMultiple(String title, String attributeName, List<String> keywords) {
+        imdbService.addAtributeMultipleToMovie(title, attributeName, keywords);
     }
 }

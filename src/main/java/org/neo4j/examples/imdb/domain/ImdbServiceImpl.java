@@ -223,7 +223,7 @@ class ImdbServiceImpl implements ImdbService
     }
 
     @Override
-    public void addKeywordsToMovie(String title, List<String> keywords) {
+    public void addAtributeMultipleToMovie(String title, String attributeName, List<String> keywords) {
         //not available
     }
 }

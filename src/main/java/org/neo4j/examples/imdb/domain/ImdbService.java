@@ -102,5 +102,5 @@ public interface ImdbService
      * @param title
      * @param keywords 
      */
-    public void addKeywordsToMovie(String title, List<String> keywords);
+    public void addAtributeMultipleToMovie(String title, String attributeName, List<String> keywords);
 }

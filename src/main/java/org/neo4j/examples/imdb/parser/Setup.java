@@ -93,6 +93,16 @@ public class Setup
             message.append(
                 parser.parseKeywords(IMDB_DATADIR + "keywords.list.gz" ) ).append(
                 '\n' );
+            System.out.println("\nParsing countries");
+            message.append(
+                parser.parseCountries(IMDB_DATADIR + "countries.list.gz" ) ).append(
+                '\n' );
+            
+            System.out.println("\nParsing languages");
+            message.append(
+                parser.parseLanguages(IMDB_DATADIR + "language.list.gz" ) ).append(
+                '\n' );
+            
             imdbService.setupReferenceRelationship();
         }
         catch ( IOException e )

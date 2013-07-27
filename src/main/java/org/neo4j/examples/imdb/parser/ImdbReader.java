@@ -58,7 +58,8 @@ public interface ImdbReader
     /**
      * Add list of keyword to movie
      * @param title
-     * @param keywords 
+     * @param keywords
      */
-    public void newKeywords(String title, List<String> keywords);
+    public void newAtributeMultiple(String previousTitle, String attributeName, List<String> keywords);
+
 }
