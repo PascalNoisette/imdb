@@ -2,6 +2,8 @@ IMDB Example Application for Neo4j
 ==================================
 
 Setup the database
+mvn clean
+mvn compile
 mvn exec:java
 
 Run the application:
