@@ -1,21 +1,16 @@
 IMDB Example Application for Neo4j
 ==================================
 
-The documentation is found here:
-http://wiki.neo4j.org/content/IMDB_Example
-
+Setup the database
+mvn exec:java
 
 Run the application:
 mvn jetty:run
-browse to:
-http://localhost:8080/imdb/setup.html
 
 Stop the application:
 mvn jetty:stop
 
-If you inspect the graph using Neoclipse,
-node-icons are found in
-src/test/resources/icons
+Please consider downloading the full dump available at http://www.imdb.com/interfaces to replace the samples supplied.
 
 Run statistics on the lattest IMDB dump files :
 - 1 456 929 actors (1428 actors/s) (19 078 actors/s using the alternative command line batch)
