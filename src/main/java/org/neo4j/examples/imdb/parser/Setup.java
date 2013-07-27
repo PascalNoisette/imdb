@@ -22,6 +22,8 @@ import java.io.IOException;
 
 import org.neo4j.examples.imdb.domain.ImdbService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 public class Setup
 {
@@ -30,6 +32,15 @@ public class Setup
     private ImdbReader imdbReader;
     @Autowired
     private ImdbService imdbService;
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        ApplicationContext context = new FileSystemXmlApplicationContext(new String[] {"src/main/webapp/WEB-INF/imdb-app-servlet.xml"});
+    	Setup selfInstance = (Setup)context.getBean("setup");
+        selfInstance.run();
+    }
 
     public String run()
     {
