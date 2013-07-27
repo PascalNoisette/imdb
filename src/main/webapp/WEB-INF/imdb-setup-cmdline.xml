@@ -58,7 +58,7 @@
         <bean id="batchIndexerSearch" factory-bean="indexProvider"
               scope="singleton"
               factory-method="nodeIndex" >
-		<constructor-arg index="0" value="exact" />
+		<constructor-arg index="0" value="search" />
                 <constructor-arg index="1">
                     <util:map>
                         <entry key="provider" value="lucene"/>
