@@ -221,4 +221,9 @@ class ImdbServiceImpl implements ImdbService
             movie.addProperties( properties );
         }
     }
+
+    @Override
+    public void addKeywordsToMovie(String title, List<String> keywords) {
+        //not available
+    }
 }

@@ -84,6 +84,11 @@ public class Setup
             message.append(
                 parser.parseGenres(IMDB_DATADIR + "genres.list.gz" ) ).append(
                 '\n' );
+           
+            System.out.println("\nParsing keywords");
+            message.append(
+                parser.parseKeywords(IMDB_DATADIR + "keywords.list.gz" ) ).append(
+                '\n' );
             imdbService.setupReferenceRelationship();
         }
         catch ( IOException e )

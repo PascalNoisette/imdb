@@ -54,4 +54,11 @@ public interface ImdbReader
      * @param genreData 
      */
     void newGenre(GenreData genreData);
+
+    /**
+     * Add list of keyword to movie
+     * @param title
+     * @param keywords 
+     */
+    public void newKeywords(String title, List<String> keywords);
 }

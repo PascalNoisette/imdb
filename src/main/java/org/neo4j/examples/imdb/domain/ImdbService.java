@@ -95,4 +95,12 @@ public interface ImdbService
      * @param votes vote count
      */
     public void addPropertiesToMovie(String title, Map<String, ? extends Object> properties);
+
+    /**
+     * Add keywords to the movie
+     * 
+     * @param title
+     * @param keywords 
+     */
+    public void addKeywordsToMovie(String title, List<String> keywords);
 }

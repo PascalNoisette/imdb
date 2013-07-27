@@ -375,4 +375,48 @@ public class ImdbParser
         }
         return (genreCount.getCount() + " genres parsed and injected.");
     }
+
+    Object parseKeywords(String filename) throws IOException {
+        BufferedReader fileReader = getFileReader(filename, "8: THE KEYWORDS LIST", 2 );
+        String line = fileReader.readLine();
+        ProgressCounter keywordsCount = new ProgressCounter("keywords");
+        final List<String> keywords = new LinkedList<String>();
+        String previousTitle = null;
+        
+        while ( line != null && !"".equals( line ))
+        {
+            String[] tokens = line.split("\t\t\t\t\t");
+            if (tokens.length != 2)
+            {
+                line = fileReader.readLine();
+                continue;
+            }
+            String title = tokens[0].trim();
+            String keyword = tokens[1].trim();
+            
+            if (title.contains( "{" ) || title.startsWith( "\"" ) )
+            {
+                line = fileReader.readLine();
+                continue;
+            }
+            
+            if (previousTitle == null) {
+                previousTitle = title;
+            }
+            
+            if (!title.equals(previousTitle)) {
+                reader.newKeywords(previousTitle, keywords);
+                keywords.clear();
+                previousTitle = title; 
+            }
+            
+            keywords.add(keyword);
+            keywordsCount.increment();
+            line = fileReader.readLine();
+        }
+        if (!keywords.isEmpty()) {
+            reader.newKeywords(previousTitle, keywords);
+        }
+        return (keywordsCount.getCount() + " genres parsed and injected.");
+    }
 }

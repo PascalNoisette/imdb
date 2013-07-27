@@ -19,6 +19,7 @@
 package org.neo4j.examples.imdb.domain;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -180,6 +181,24 @@ class ImdbServiceBatchImpl implements ImdbService
                 batchInserter.setNodeProperty(movie.getId(), key, value);
                 searchEngine.indexProperty(movie.getId(), key, value);
             }
+        }
+    }
+
+    @Override
+    public void addKeywordsToMovie(String title, List<String> keywords) {
+        Movie movie = getMovie(title);
+        if (movie != null) {
+            StringBuilder buffer=new StringBuilder();
+            Iterator iter = keywords.iterator();
+            while (iter.hasNext()) {
+                String keyword = (String) iter.next();
+                searchEngine.indexProperty(movie.getId(), "keyword", keyword);
+                buffer.append(keyword);
+                if (iter.hasNext()) {
+                    buffer.append(", ");
+                }
+            }
+            addPropertiesToMovie(title, MapUtil.map("keywords", buffer.toString()));
         }
     }
 }
