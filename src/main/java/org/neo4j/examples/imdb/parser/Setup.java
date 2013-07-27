@@ -75,6 +75,10 @@ public class Setup
             message.append(
                 parser.parseWriters( IMDB_DATADIR + "writers.list.gz"  )).append( '\n' );
             
+            System.out.println("\nParsing cinematographers");
+            message.append(
+                parser.parseCinematographer( IMDB_DATADIR + "cinematographers.list.gz"  )).append( '\n' );
+            
             System.out.println("\nParsing ratings");
             message.append(
                 parser.parseRatings(IMDB_DATADIR + "ratings.list.gz" ) ).append(

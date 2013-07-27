@@ -419,4 +419,8 @@ public class ImdbParser
         }
         return (keywordsCount.getCount() + " genres parsed and injected.");
     }
+
+    Object parseCinematographer(String filename) throws IOException {
+        return parsePersonFile(getFileReader(filename, "THE CINEMATOGRAPHERS LIST", 4 ), RelTypes.CINEMATOGRAPHER);
+    }
 }
