@@ -198,7 +198,7 @@ class ImdbServiceBatchImpl implements ImdbService
                     buffer.append(", ");
                 }
             }
-            addPropertiesToMovie(title, MapUtil.map(attributeName, buffer.toString()));
+            batchInserter.setNodeProperty(movie.getId(), attributeName, buffer.toString());
         }
     }
 }
