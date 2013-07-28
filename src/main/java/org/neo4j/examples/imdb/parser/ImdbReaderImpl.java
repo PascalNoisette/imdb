@@ -18,11 +18,14 @@
  */
 package org.neo4j.examples.imdb.parser;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.neo4j.examples.imdb.domain.Person;
 import org.neo4j.examples.imdb.domain.ImdbService;
 import org.neo4j.examples.imdb.domain.Movie;
+import org.neo4j.examples.imdb.domain.RelTypes;
 import org.neo4j.helpers.collection.MapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,15 +63,18 @@ class ImdbReaderImpl implements ImdbReader
     private void newActor( final String name, final RoleData[] movieRoles )
     {
         final Person actor = imdbService.createPerson( name );
+        Set<RelTypes> distinctRoles = new HashSet<RelTypes>();
         for ( RoleData movieRole : movieRoles )
         {
             final Movie movie = imdbService
                 .getMovie( movieRole.getTitle() );
             if ( movie != null )
             {
+                distinctRoles.add(movieRole.getRole());
                 imdbService.createRole( actor, movie, movieRole.getRole(),  movieRole.getCharacter());
             }
         }
+        imdbService.indexRoles(actor, distinctRoles);
     }
 
     @Override

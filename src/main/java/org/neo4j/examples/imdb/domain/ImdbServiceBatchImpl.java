@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import org.neo4j.graphdb.Node;
 import org.neo4j.helpers.collection.MapUtil;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
@@ -199,6 +200,15 @@ class ImdbServiceBatchImpl implements ImdbService
                 }
             }
             batchInserter.setNodeProperty(movie.getId(), attributeName, buffer.toString());
+        }
+    }
+
+    @Override
+    public void indexRoles(Person actor, Set<RelTypes> distinctRoles) {
+        Iterator<RelTypes> it = distinctRoles.iterator();
+        while(it.hasNext()) {
+            RelTypes relTypes = it.next();
+            searchEngine.indexProperty(actor.getId(), "role", relTypes.toString());
         }
     }
 }

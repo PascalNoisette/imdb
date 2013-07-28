@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import org.neo4j.graphalgo.GraphAlgoFactory;
 import org.neo4j.graphalgo.PathFinder;
 
@@ -225,5 +226,10 @@ class ImdbServiceImpl implements ImdbService
     @Override
     public void addAtributeMultipleToMovie(String title, String attributeName, List<String> keywords) {
         //not available
+    }
+
+    @Override
+    public void indexRoles(Person actor, Set<RelTypes> distinctRoles) {
+         //not available
     }
 }
