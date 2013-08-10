@@ -189,17 +189,10 @@ class ImdbServiceBatchImpl implements ImdbService
     public void addAtributeMultipleToMovie(String title, String attributeName, List<String> keywords) {
         Movie movie = getMovie(title);
         if (movie != null) {
-            StringBuilder buffer=new StringBuilder();
-            Iterator iter = keywords.iterator();
-            while (iter.hasNext()) {
-                String keyword = (String) iter.next();
+            for (String keyword : keywords) {
                 searchEngine.indexProperty(movie.getId(), attributeName, keyword);
-                buffer.append(keyword);
-                if (iter.hasNext()) {
-                    buffer.append(", ");
-                }
             }
-            batchInserter.setNodeProperty(movie.getId(), attributeName, buffer.toString());
+            batchInserter.setNodeProperty(movie.getId(), attributeName, keywords.toArray(new String[keywords.size()]));
         }
     }
 
