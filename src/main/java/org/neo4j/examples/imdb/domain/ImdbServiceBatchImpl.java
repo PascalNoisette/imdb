@@ -42,8 +42,11 @@ class ImdbServiceBatchImpl implements ImdbService
     @Autowired
     private ImdbSearchEngine searchEngine;
     
+    @Autowired
+    private ImdbLabelEngine labelEngine;
+    
     private final Map<String, Map<String, Long>> inMemoryIndex = new HashMap<String, Map<String, Long>>();
-
+    
     private static final String TITLE_INDEX = "title";
     private static final String NAME_INDEX = "name";
 
@@ -63,7 +66,7 @@ class ImdbServiceBatchImpl implements ImdbService
     
     private Person _createPerson( final String name )
     {
-        final Person actor = new PersonBatchImpl( batchInserter.createNode(MapUtil.map("name", name)) );
+        final Person actor = new PersonBatchImpl( batchInserter.createNode(MapUtil.map(NAME_INDEX, name), labelEngine.getLabel("PERSON")) );
         actor.setName(name);
         inMemoryIndex.get(NAME_INDEX).put(name, actor.getId());
         searchEngine.indexActor( actor );
@@ -83,7 +86,7 @@ class ImdbServiceBatchImpl implements ImdbService
     
     private Movie _createMovie( final String title, final int year )
     {
-        final Movie movie = new MovieBatchImpl( batchInserter.createNode(MapUtil.map("title", title, "year", year ))  );
+        final Movie movie = new MovieBatchImpl( batchInserter.createNode(MapUtil.map(TITLE_INDEX, title, "year", year ), labelEngine.getLabel("MOVIE")));
         movie.setTitle(title);
         movie.setYear(year);
         inMemoryIndex.get(TITLE_INDEX).put(title, movie.getId());
@@ -181,6 +184,7 @@ class ImdbServiceBatchImpl implements ImdbService
                 Object value = en.getValue();
                 batchInserter.setNodeProperty(movie.getId(), key, value);
                 searchEngine.indexProperty(movie.getId(), key, value);
+                labelEngine.addPropertyToLabel("MOVIE", key);
             }
         }
     }

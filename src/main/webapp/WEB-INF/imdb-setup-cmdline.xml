@@ -37,7 +37,7 @@
               destroy-method="shutdown">
 		<constructor-arg index="0" value="target/neo4j-db" />
 	</bean>
-        <bean id="indexProvider" class="org.neo4j.unsafe.batchinsert.LuceneBatchInserterIndexProvider" 
+        <bean id="indexProvider" class="org.neo4j.index.lucene.unsafe.batchinsert.LuceneBatchInserterIndexProvider" 
               scope="singleton"
               destroy-method="shutdown">
 		<constructor-arg index="0" ref="batchInserter" />
@@ -82,6 +82,6 @@
 	<bean id="imdbService" class="org.neo4j.examples.imdb.domain.ImdbServiceBatchImpl"/>
 	<bean id="searchEngine" class="org.neo4j.examples.imdb.domain.ImdbSearchEngineBatchImpl" />
 	<bean id="imdbReader" class="org.neo4j.examples.imdb.parser.ImdbReaderImpl" />
-
+        <bean id="labelEngine" class="org.neo4j.examples.imdb.domain.ImdbLabelEngine" />
         <bean id="setup" class="org.neo4j.examples.imdb.parser.Setup" />
 </beans>

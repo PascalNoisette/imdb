@@ -44,6 +44,9 @@ public class ImdbSearchEngineBatchImpl implements ImdbSearchEngine
     @Autowired
     private BatchInserter batchInserter;
     
+    @Autowired
+    private ImdbLabelEngine labelEngine;
+    
     private Long rootCategory = null;
        
     private final Map<String, FacetCategory> inMemoryCategoryIndex = new HashMap<String, FacetCategory>();
@@ -79,9 +82,11 @@ public class ImdbSearchEngineBatchImpl implements ImdbSearchEngine
         
         Long facetId = category.get(value.toString());
         if (facetId == null) {
-            facetId = batchInserter.createNode(MapUtil.map("facet", key, "value", value));
+            facetId = batchInserter.createNode(MapUtil.map("facet", key, "value", value), labelEngine.getLabel("FACET"));
             batchIndexerFacets.add(facetId, MapUtil.map("facet", key));
             batchIndexerFacets.add(facetId, MapUtil.map(key, value));
+            labelEngine.addPropertyToLabel("FACET", "facet");
+            labelEngine.addPropertyToLabel("FACET", key);
             batchInserter.createRelationship(facetId, category.getId(), RelTypes.VALUE, null); 
             category.put(value.toString(), facetId);
         }
@@ -93,9 +98,10 @@ public class ImdbSearchEngineBatchImpl implements ImdbSearchEngine
     {
         FacetCategory category = inMemoryCategoryIndex.get(key);
         if (category == null) {
-            category = new FacetCategory(batchInserter.createNode(MapUtil.map("category", key)));
+            category = new FacetCategory(batchInserter.createNode(MapUtil.map("category", key), labelEngine.getLabel("CATEGORY")));
             batchIndexerFacets.add(category.getId(), MapUtil.map("category", key));
             inMemoryCategoryIndex.put(key, category);
+            labelEngine.addPropertyToLabel("CATEGORY", "category");
             batchInserter.createRelationship(category.getId(), getRootCategory() , RelTypes.CATEGORY, null); 
         }
         
