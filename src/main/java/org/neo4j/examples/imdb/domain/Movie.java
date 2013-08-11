@@ -74,4 +74,9 @@ public interface Movie
      * @return id of this movie.
      */
     public long getId();
+    
+
+    public void setFormat(MovieFormat format);
+
+    public MovieFormat getFormat();
 }

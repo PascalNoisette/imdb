@@ -62,6 +62,7 @@ public class ImdbSearchEngineBatchImpl implements ImdbSearchEngine
     {
         batchIndexerSearch.add(movie.getId(), MapUtil.map(TITLE_INDEX, movie.getTitle()));
         indexProperty(movie.getId(), "year", movie.getYear());
+        indexProperty(movie.getId(), "format", movie.getFormat().toString());
     }
     
     @Override

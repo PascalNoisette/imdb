@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipInputStream;
 import org.graphipedia.dataimport.ProgressCounter;
+import org.neo4j.examples.imdb.domain.MovieFormat;
 import org.neo4j.examples.imdb.domain.RelTypes;
 
 /**
@@ -84,8 +85,8 @@ public class ImdbParser
         ProgressCounter movieCount = new ProgressCounter("movies");
         while ( line != null )
         {
-            // get rid of blank lines and TV shows, video games, video clip
-            if ( "".equals( line ) || line.indexOf( "(TV)" ) != -1  || line.indexOf( "(VG)" ) != -1 || line.indexOf( "(V)" ) != -1 )
+            // get rid of blank lines, video games, video clip
+            if ( "".equals( line ) || line.indexOf( "(VG)" ) != -1 || line.indexOf( "(V)" ) != -1 )
             {
                 line = fileReader.readLine();
                 continue;
@@ -93,11 +94,20 @@ public class ImdbParser
             final int yearSep = line.indexOf( '\t' );
             if ( yearSep > 0 )
             {
-                final String title = line.substring( 0, yearSep ).trim();
+                MovieFormat format = MovieFormat.FILM;
+                String title = line.substring( 0, yearSep ).trim();
                 String yearString = line.substring( yearSep ).trim();
                 if ( yearString.length() > 4 )
                 {
                     yearString = yearString.substring( 0, 4 );
+                }
+                if (title.startsWith( "\"" )) {
+                    format = MovieFormat.SERIE;
+                    title = title.replace("\"", "");
+                }
+                if ( line.indexOf( "(TV)" ) != -1 )
+                {
+                    format = MovieFormat.TV;
                 }
                 if ( yearString.length() == 0 || yearString.charAt( 0 ) == '?'
                     || title.contains( "{" ) || title.startsWith( "\"" ) )
@@ -106,7 +116,7 @@ public class ImdbParser
                     continue;
                 }
                 final int year = Integer.parseInt( yearString );
-                buffer.add( new MovieData( title, year ) );
+                buffer.add( new MovieData( title, year, format ) );
                 movieCount.increment();
                 if ( movieCount.getCount() % BUFFER_SIZE == 0 )
                 {
@@ -147,6 +157,11 @@ public class ImdbParser
             String title = tokens[tokens.length-1].trim();
             String rank = tokens[tokens.length-2].trim();  
             String votes = tokens[tokens.length-3].trim();  
+            
+            if (title.startsWith( "\"" )) {
+                title = title.replace("\"", "");
+            }
+            
             if (title.contains( "{" ) || title.startsWith( "\"" ) )
             {
                 line = fileReader.readLine();
@@ -204,6 +219,7 @@ public class ImdbParser
         }
         String line = fileReader.readLine();
         String currentActor = null;
+        String previousTitleForActor = null;
         final List<PersonData> buffer = new LinkedList<PersonData>();
         final List<RoleData> movies = new ArrayList<RoleData>();
         int movieCount = 0;
@@ -228,10 +244,22 @@ public class ImdbParser
                             .toArray( new RoleData[movies.size()] ) ) );
                         actorCount.increment();
                         movies.clear();
+                        previousTitleForActor = null;
                     }
                     currentActor = actor;
                 }
                 String title = line.substring( actorSep ).trim();
+                
+                //normalize title : remove episode name
+                if (title.contains( "{" ) && title.contains( "}" )) {
+                    int startEpisodeSep = title.indexOf("{");
+                    int endEpisodeSep = title.indexOf("}");
+                    title = title.substring(0, startEpisodeSep).trim() + title.substring(endEpisodeSep+1, title.length());
+                }
+                if (title.startsWith( "\"" )) {
+                    title = title.replace("\"", "");
+                }
+                
                 if ( title.length() == 0 || title.contains( "{" )
                     || title.startsWith( "\"" ) || title.contains( "????" ) )
                 {
@@ -270,6 +298,14 @@ public class ImdbParser
                         title = title.substring( 0, spaces ).trim();
                     }
                 }
+                
+                
+                if (title.equals(previousTitleForActor)) {
+                    line = fileReader.readLine();
+                    continue;
+                }
+                previousTitleForActor = title;
+                
                 movies.add( new RoleData( title, batchName, character ) );
                 movieCount++;
                 if ( movieCount % BUFFER_SIZE == 0 )
@@ -362,6 +398,9 @@ public class ImdbParser
             }
             String title = tokens[0].trim();
             String genre = tokens[1].trim();
+            if (title.startsWith( "\"" )) {
+                title = title.replace("\"", "");
+            }
             if (title.contains( "{" ) || title.startsWith( "\"" ) )
             {
                 line = fileReader.readLine();
@@ -397,6 +436,10 @@ public class ImdbParser
             }
             String title = tokens[0].trim();
             String keyword = tokens[1].trim();
+            
+            if (title.startsWith( "\"" )) {
+                title = title.replace("\"", "");
+            }
             
             if (title.contains( "{" ) || title.startsWith( "\"" ) )
             {

@@ -18,20 +18,24 @@
  */
 package org.neo4j.examples.imdb.parser;
 
+import org.neo4j.examples.imdb.domain.MovieFormat;
+
 public class MovieData
 {
     private final String title;
     private final int year;
+    private final MovieFormat format;
 
     /**
      * Create container for movie data.
      * @param title title of movie
      * @param year release year of movie
      */
-    MovieData( final String title, final int year )
+    MovieData( final String title, final int year, final MovieFormat format )
     {
         this.title = title;
         this.year = year;
+        this.format = format;
     }
 
     public String getTitle()
@@ -42,5 +46,9 @@ public class MovieData
     public int getYear()
     {
         return year;
+    }
+
+    public MovieFormat getFormat() {
+        return format;
     }
 }

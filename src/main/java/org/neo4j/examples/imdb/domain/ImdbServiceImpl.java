@@ -78,7 +78,7 @@ class ImdbServiceImpl implements ImdbService
     }
 
     @Override
-    public Movie createMovie( final String title, final int year ) 
+    public Movie createMovie( final String title, final int year, MovieFormat format ) 
     {
         Movie movie = getMovie(title);
         if (movie == null) {

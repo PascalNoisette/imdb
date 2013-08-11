@@ -27,6 +27,7 @@ class MovieBatchImpl implements Movie
     private long underlyingNodeId = -1;
     private String title;
     private int year;
+    private MovieFormat format;
 
 
     MovieBatchImpl(long id) {
@@ -101,4 +102,13 @@ class MovieBatchImpl implements Movie
     {
          throw new UnsupportedOperationException("Not supported yet."); 
     }
+
+    @Override
+    public void setFormat(MovieFormat format) {
+        this.format = format;
+    }    
+    public MovieFormat getFormat() {
+        return format;
+    }
+
 }

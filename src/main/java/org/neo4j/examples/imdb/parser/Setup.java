@@ -53,7 +53,7 @@ public class Setup
             message.append(
                 parser.parseMovies( IMDB_DATADIR + "movies.list.gz" ) ).append(
                 '\n' );
-            
+
             System.out.println("\nParsing actors");
             message.append(
                 parser.parseActors( IMDB_DATADIR + "actors.list.gz",

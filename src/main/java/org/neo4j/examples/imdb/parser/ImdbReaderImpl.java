@@ -25,6 +25,7 @@ import java.util.Set;
 import org.neo4j.examples.imdb.domain.Person;
 import org.neo4j.examples.imdb.domain.ImdbService;
 import org.neo4j.examples.imdb.domain.Movie;
+import org.neo4j.examples.imdb.domain.MovieFormat;
 import org.neo4j.examples.imdb.domain.RelTypes;
 import org.neo4j.helpers.collection.MapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,13 +52,13 @@ class ImdbReaderImpl implements ImdbReader
     {
         for ( MovieData movieData : movieList )
         {
-            newMovie( movieData.getTitle(), movieData.getYear() );
+            newMovie( movieData.getTitle(), movieData.getYear(), movieData.getFormat() );
         }
     }
 
-    private void newMovie( final String title, final int year )
+    private void newMovie( final String title, final int year, MovieFormat format )
     {
-        imdbService.createMovie( title, year );
+        imdbService.createMovie( title, year, format );
     }
 
     private void newActor( final String name, final RoleData[] movieRoles )

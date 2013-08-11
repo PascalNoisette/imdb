@@ -134,4 +134,13 @@ class MovieImpl implements Movie
     public long getId() {
         return underlyingNode.getId();
     }
+
+    public MovieFormat getFormat() {
+        return (MovieFormat) underlyingNode.getProperty( "format" );
+    }
+
+    @Override
+    public void setFormat(MovieFormat format) {
+        underlyingNode.setProperty( "format", format.toString() );
+    }
 }

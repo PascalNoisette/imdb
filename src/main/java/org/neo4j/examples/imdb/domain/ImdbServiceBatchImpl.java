@@ -75,20 +75,21 @@ class ImdbServiceBatchImpl implements ImdbService
     }
 
     @Override
-    public Movie createMovie( final String title, final int year ) 
+    public Movie createMovie( final String title, final int year, MovieFormat format) 
     {
         Movie movie = getMovie(title);
         if (movie == null) {
-            movie = _createMovie(title, year);
+            movie = _createMovie(title, year, format);
         }
         return movie;
     }
     
-    private Movie _createMovie( final String title, final int year )
+    private Movie _createMovie( final String title, final int year, MovieFormat format )
     {
-        final Movie movie = new MovieBatchImpl( batchInserter.createNode(MapUtil.map(TITLE_INDEX, title, "year", year ), labelEngine.getLabel("MOVIE")));
+        final Movie movie = new MovieBatchImpl( batchInserter.createNode(MapUtil.map(TITLE_INDEX, title, "year", year, "format", format.toString() ), labelEngine.getLabel("MOVIE")));
         movie.setTitle(title);
         movie.setYear(year);
+        movie.setFormat(format);
         inMemoryIndex.get(TITLE_INDEX).put(title, movie.getId());
         searchEngine.indexMovie( movie );
         batchIndexerExact.add(movie.getId(), MapUtil.map(TITLE_INDEX, title));

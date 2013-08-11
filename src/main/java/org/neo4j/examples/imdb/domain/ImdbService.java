@@ -39,7 +39,7 @@ public interface ImdbService
      *            year of release
      * @return the new movie
      */
-    Movie createMovie( String title, int year );
+    Movie createMovie( String title, int year, MovieFormat format);
 
     /**
      * Store a new role in the graph.
