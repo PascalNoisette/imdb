@@ -84,8 +84,8 @@ public class ImdbParser
         ProgressCounter movieCount = new ProgressCounter("movies");
         while ( line != null )
         {
-            // get rid of blank lines and TV shows
-            if ( "".equals( line ) || line.indexOf( "(TV)" ) != -1 )
+            // get rid of blank lines and TV shows, video games, video clip
+            if ( "".equals( line ) || line.indexOf( "(TV)" ) != -1  || line.indexOf( "(VG)" ) != -1 || line.indexOf( "(V)" ) != -1 )
             {
                 line = fileReader.readLine();
                 continue;
