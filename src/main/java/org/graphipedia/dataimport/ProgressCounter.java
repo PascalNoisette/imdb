@@ -25,13 +25,13 @@ public class ProgressCounter {
     private static final int BIG_STEP = 50 * THOUSAND;
     private long startTime = System.currentTimeMillis(); 
     private String name;
-    private int count = 0;
+    private long count = 0;
     
     public ProgressCounter(String name) {
         this.name = name;
     }
     
-    public int getCount() {
+    public long getCount() {
         return count;
     }
 
