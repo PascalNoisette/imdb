@@ -19,7 +19,9 @@
 package org.neo4j.examples.imdb.parser;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import org.graphipedia.dataimport.ProgressCounter;
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -36,9 +38,18 @@ public class Stat {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        GraphDatabaseService graphDb = getGraphDb();
+        actorPalmares(graphDb);
+        moviePalmaresThreshold(graphDb);
+    }
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void actorPalmares(GraphDatabaseService graphDb) {
 
         ProgressCounter actorCount = new ProgressCounter("person");
-        GraphDatabaseService graphDb = getGraphDb();
+        
         ResourceIterator<Node> it = GlobalGraphOperations.at(graphDb).getAllNodesWithLabel(DynamicLabel.label("PERSON")).iterator();
         Transaction tx = null;
         tx = graphDb.beginTx();
@@ -75,6 +86,46 @@ public class Stat {
         tx.finish();
     }
 
+    /**
+     * @param args the command line arguments
+     */
+    public static void moviePalmaresThreshold(GraphDatabaseService graphDb) {
+
+        ProgressCounter movieCount = new ProgressCounter("movies");
+        
+        ResourceIterator<Node> it = GlobalGraphOperations.at(graphDb).getAllNodesWithLabel(DynamicLabel.label("MOVIE")).iterator();
+        Transaction tx = null;
+        tx = graphDb.beginTx();
+        while (it.hasNext()) {
+            Node movie = it.next();
+            if (movieCount.getCount() % 2000 == 0) {
+                tx.success();
+                tx.finish();
+                tx = graphDb.beginTx();
+            }
+            Iterable<Relationship> relationships = movie.getRelationships();
+            
+            Set<Long> actors = new HashSet<Long>();
+            float palmaresSum = 0;
+            for (Relationship r : relationships) {
+                Node actor = r.getOtherNode(movie);
+                if (actor.hasProperty("palmares") && !actors.contains(actor.getId())) {
+                    actors.add(actor.getId());
+                    palmaresSum += (Float)actor.getProperty("palmares");
+                }
+            }
+            // threshold to get top X actor is Math.max(0, (1 - (X/actors.size())) * palmaresSum / actors.size());
+            movie.setProperty("actor_palmares_sum", palmaresSum);
+            movie.setProperty("actor_count", actors.size());
+            
+            
+            movieCount.increment();
+        }
+        
+        tx.success();
+        tx.finish();
+    }
+    
     public static GraphDatabaseService getGraphDb() {
         GraphDatabaseService graphDb = null;
         
