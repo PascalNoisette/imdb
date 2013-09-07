@@ -114,7 +114,7 @@ public class Stat {
                     palmaresSum += (Float)actor.getProperty("palmares");
                 }
             }
-            // threshold to get top X actor is Math.max(0, (1 - (X/actors.size())) * palmaresSum / actors.size());
+            // threshold to get top X actor is X * movie.actor_palmares_sum /movie.actor_count
             movie.setProperty("actor_palmares_sum", palmaresSum);
             movie.setProperty("actor_count", actors.size());
             
