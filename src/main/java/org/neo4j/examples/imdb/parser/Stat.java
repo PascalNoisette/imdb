@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import org.graphipedia.dataimport.ProgressCounter;
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -103,20 +104,9 @@ public class Stat {
                 tx.finish();
                 tx = graphDb.beginTx();
             }
-            Iterable<Relationship> relationships = movie.getRelationships();
             
-            Set<Long> actors = new HashSet<Long>();
-            float palmaresSum = 0;
-            for (Relationship r : relationships) {
-                Node actor = r.getOtherNode(movie);
-                if (actor.hasProperty("palmares") && !actors.contains(actor.getId())) {
-                    actors.add(actor.getId());
-                    palmaresSum += (Float)actor.getProperty("palmares");
-                }
-            }
-            // threshold to get top X actor is X * movie.actor_palmares_sum /movie.actor_count
-            movie.setProperty("actor_palmares_sum", palmaresSum);
-            movie.setProperty("actor_count", actors.size());
+            Float topX = retriveTopXPalmares(movie, 3);
+            movie.setProperty("actor_palmares_top_3", topX);
             
             
             movieCount.increment();
@@ -124,6 +114,37 @@ public class Stat {
         
         tx.success();
         tx.finish();
+    }
+    
+    public static Float retriveTopXPalmares(Node movie, int X) 
+    {        
+        TreeSet<Float> actorsPalmares = retriveActorPalmares(movie);
+        Float lastTop = null;
+        Float topX = new Float(0);
+        
+        while ((lastTop = actorsPalmares.pollLast()) != null && X > 0) {
+             topX = lastTop;
+             X--;
+             
+        }
+        
+        return topX;
+    }
+    
+    public static TreeSet<Float> retriveActorPalmares(Node movie) {
+        Iterable<Relationship> relationships = movie.getRelationships();
+
+        Set<Long> actors = new HashSet<Long>();
+        TreeSet<Float> actorsPalmares = new TreeSet<Float>();
+        for (Relationship r : relationships) {
+            Node actor = r.getOtherNode(movie);
+            if (actor.hasProperty("palmares") && !actors.contains(actor.getId())) {
+                actors.add(actor.getId());
+                actorsPalmares.add((Float)actor.getProperty("palmares"));
+            }
+        } 
+        
+        return actorsPalmares;
     }
     
     public static GraphDatabaseService getGraphDb() {
