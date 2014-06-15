@@ -175,10 +175,6 @@ class BatchNode implements Node {
         return this.nodeProperties.keySet();
     }
 
-    @Override
-    public Iterable<Object> getPropertyValues() {
-        return this.nodeProperties.values();
-    }
 
     @Override
     public void addLabel(Label label) {
@@ -197,6 +193,26 @@ class BatchNode implements Node {
 
     @Override
     public ResourceIterable<Label> getLabels() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Iterable<RelationshipType> getRelationshipTypes() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public int getDegree() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public int getDegree(RelationshipType rt) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public int getDegree(Direction drctn) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public int getDegree(RelationshipType rt, Direction drctn) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

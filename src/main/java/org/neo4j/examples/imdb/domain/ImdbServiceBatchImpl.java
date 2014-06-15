@@ -150,18 +150,6 @@ class ImdbServiceBatchImpl implements ImdbService
     }
 
     @Override
-    public void setupReferenceRelationship()
-    {
-        Node baconNode = getSingleNode( "name", "Bacon, Kevin (I)" );
-        if ( baconNode == null )
-        {
-            throw new NoSuchElementException(
-                "Unable to find Kevin Bacon actor" );
-        }
-        batchInserter.createRelationship(batchInserter.getReferenceNode(), baconNode.getId(), RelTypes.IMDB, null);
-    }
-
-    @Override
     public List<?> getBaconPath( final Person actor )
     {
         throw new UnsupportedOperationException("Not supported yet."); 

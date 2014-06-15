@@ -158,20 +158,6 @@ class ImdbServiceImpl implements ImdbService
     }
 
     @Override
-    @Transactional
-    public void setupReferenceRelationship()
-    {
-        Node baconNode = getSingleNode( "name", "Bacon, Kevin (I)" );
-        if ( baconNode == null )
-        {
-            throw new NoSuchElementException(
-                "Unable to find Kevin Bacon actor" );
-        }
-        Node referenceNode = graphDbService.getReferenceNode();
-        referenceNode.createRelationshipTo( baconNode, RelTypes.IMDB );
-    }
-
-    @Override
     public List<?> getBaconPath( final Person actor )
     {
         final Node baconNode;
@@ -181,8 +167,7 @@ class ImdbServiceImpl implements ImdbService
         }
         try
         {
-            baconNode = graphDbService.getReferenceNode().getSingleRelationship(
-                RelTypes.IMDB, Direction.OUTGOING ).getEndNode();
+            baconNode = getSingleNode( "name", "Bacon, Kevin (I)" );
         }
         catch ( NoSuchElementException e )
         {

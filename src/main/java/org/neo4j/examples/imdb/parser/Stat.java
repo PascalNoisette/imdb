@@ -18,9 +18,7 @@
  */
 package org.neo4j.examples.imdb.parser;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import org.graphipedia.dataimport.ProgressCounter;
@@ -30,7 +28,7 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.kernel.EmbeddedGraphDatabase;
+import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.tooling.GlobalGraphOperations;
 
 public class Stat {
@@ -45,21 +43,20 @@ public class Stat {
     }
     
     /**
-     * @param args the command line arguments
+     * @param graphDb
      */
     public static void actorPalmares(GraphDatabaseService graphDb) {
 
         ProgressCounter actorCount = new ProgressCounter("person");
-        
+        Transaction tx = graphDb.beginTx();
         ResourceIterator<Node> it = GlobalGraphOperations.at(graphDb).getAllNodesWithLabel(DynamicLabel.label("PERSON")).iterator();
-        Transaction tx = null;
-        tx = graphDb.beginTx();
+        
         while (it.hasNext()) {
             Node person = it.next();
             
             if (actorCount.getCount() % 2000 == 0) {
                 tx.success();
-                tx.finish();
+                tx.close();
                 tx = graphDb.beginTx();
             }
             Iterable<Relationship> relationships = person.getRelationships();
@@ -84,24 +81,20 @@ public class Stat {
         }
         
         tx.success();
-        tx.finish();
+        tx.close();
     }
 
-    /**
-     * @param args the command line arguments
-     */
     public static void moviePalmaresThreshold(GraphDatabaseService graphDb) {
 
         ProgressCounter movieCount = new ProgressCounter("movies");
-        
+        Transaction tx = graphDb.beginTx();
         ResourceIterator<Node> it = GlobalGraphOperations.at(graphDb).getAllNodesWithLabel(DynamicLabel.label("MOVIE")).iterator();
-        Transaction tx = null;
-        tx = graphDb.beginTx();
+
         while (it.hasNext()) {
             Node movie = it.next();
             if (movieCount.getCount() % 2000 == 0) {
                 tx.success();
-                tx.finish();
+                tx.close();
                 tx = graphDb.beginTx();
             }
             
@@ -113,13 +106,13 @@ public class Stat {
         }
         
         tx.success();
-        tx.finish();
+        tx.close();
     }
     
     public static Float retriveTopXPalmares(Node movie, int X) 
     {        
         TreeSet<Float> actorsPalmares = retriveActorPalmares(movie);
-        Float lastTop = null;
+        Float lastTop;
         Float topX = new Float(0);
         
         while ((lastTop = actorsPalmares.pollLast()) != null && X > 0) {
@@ -148,21 +141,11 @@ public class Stat {
     }
     
     public static GraphDatabaseService getGraphDb() {
-        GraphDatabaseService graphDb = null;
+        GraphDatabaseService graphDb = new GraphDatabaseFactory()
+            .newEmbeddedDatabaseBuilder( "target/neo4j-db" )
+            .loadPropertiesFromFile( "target/classes/conf/neo4j.properties" )
+            .newGraphDatabase();
         
-
-        Map<String, String> opts = new HashMap();
-        opts.put("execution_guard_enabled", "false");
-        opts.put("keep_logical_logs", "false");
-        opts.put("neostore.nodestore.db.mapped_memory", "100M");
-        opts.put("neostore.relationshipstore.db.mapped_memory", "100M");
-        opts.put("neostore.propertystore.db.mapped_memory", "200M");
-        opts.put("neostore.propertystore.db.strings.mapped_memory", "350M");
-        opts.put("neostore.propertystore.db.arrays.mapped_memory", "350M");
-        opts.put("wrapper.java.initmemory", "728");
-        opts.put("wrapper.java.maxmemory", "2800");
-
-        graphDb = new EmbeddedGraphDatabase("target/neo4j-db", opts);
         registerShutdownHook(graphDb);
         return graphDb;
     }

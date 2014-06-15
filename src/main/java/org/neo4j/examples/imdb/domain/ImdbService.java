@@ -83,12 +83,6 @@ public interface ImdbService
     List<?> getBaconPath( Person actor );
     
     /**
-     * Add a relationship from some node to the reference node.
-     * Will make it easy and fast to retrieve this node.
-     */
-    void setupReferenceRelationship();
-
-    /**
      * Add rating info to movie node
      * 
      * @param title movie node name
