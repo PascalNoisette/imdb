@@ -53,6 +53,10 @@ public class Stat {
         
         while (it.hasNext()) {
             Node person = it.next();
+            if (person.hasProperty("movie_count")) {
+                actorCount.increment();
+                continue;
+            }
             
             if (actorCount.getCount() % 2000 == 0) {
                 tx.success();
@@ -92,6 +96,10 @@ public class Stat {
 
         while (it.hasNext()) {
             Node movie = it.next();
+            if (movie.hasProperty("actor_palmares_top_3")) {
+                movieCount.increment();
+                continue;
+            }
             if (movieCount.getCount() % 2000 == 0) {
                 tx.success();
                 tx.close();
