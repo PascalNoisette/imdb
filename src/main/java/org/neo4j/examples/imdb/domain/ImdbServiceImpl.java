@@ -34,7 +34,6 @@ import org.neo4j.graphdb.Path;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.IndexHits;
-import org.neo4j.helpers.collection.MapUtil;
 import org.neo4j.kernel.Traversal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -231,5 +230,10 @@ class ImdbServiceImpl implements ImdbService
     @Override
     public void indexRoles(Person actor, Set<RelTypes> distinctRoles) {
          //not available
+    }
+
+    @Override
+    public void flush() {
+        
     }
 }

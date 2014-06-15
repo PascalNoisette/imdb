@@ -30,8 +30,6 @@ public class Setup
     private static final String IMDB_DATADIR = "target/classes/data/";
     @Autowired
     private ImdbReader imdbReader;
-    @Autowired
-    private ImdbService imdbService;
     
     /**
      * @param args the command line arguments
@@ -42,7 +40,7 @@ public class Setup
     	Setup selfInstance = (Setup)context.getBean("setup");
         selfInstance.run();
     }
-
+    
     public String run()
     {
         final ImdbParser parser = new ImdbParser( imdbReader );
@@ -53,57 +51,61 @@ public class Setup
             message.append(
                 parser.parseMovies( IMDB_DATADIR + "movies.list.gz" ) ).append(
                 '\n' );
+            imdbReader.flush();
 
             System.out.println("\nParsing actors");
             message.append(
-                parser.parseActors( IMDB_DATADIR + "actors.list.gz",
-                    IMDB_DATADIR + "actresses.list.gz" ) ).append( '\n' );
-            
+                parser.parseActor(IMDB_DATADIR + "actors.list.gz" ) ).append( '\n' );
+            imdbReader.flush();
+            System.out.println("\nParsing actress");
+            message.append(
+                parser.parseActress(IMDB_DATADIR + "actresses.list.gz") ).append( '\n' );
+            imdbReader.flush();
             System.out.println("\nParsing director");
             message.append(
                 parser.parseDirectors( IMDB_DATADIR + "directors.list.gz"  )).append( '\n' );
-            
+            imdbReader.flush();
             System.out.println("\nParsing composers");
             message.append(
                 parser.parseComposers( IMDB_DATADIR + "composers.list.gz"  )).append( '\n' );
-            
+            imdbReader.flush();
             System.out.println("\nParsing producers");
             message.append(
                 parser.parseProducers( IMDB_DATADIR + "producers.list.gz"  )).append( '\n' );
-            
+            imdbReader.flush();
             System.out.println("\nParsing writers");
             message.append(
                 parser.parseWriters( IMDB_DATADIR + "writers.list.gz"  )).append( '\n' );
-            
+            imdbReader.flush();
             System.out.println("\nParsing cinematographers");
             message.append(
                 parser.parseCinematographer( IMDB_DATADIR + "cinematographers.list.gz"  )).append( '\n' );
-            
+            imdbReader.flush();
             System.out.println("\nParsing ratings");
             message.append(
                 parser.parseRatings(IMDB_DATADIR + "ratings.list.gz" ) ).append(
                 '\n' );
-            
+            imdbReader.flush();
             System.out.println("\nParsing genres");
             message.append(
                 parser.parseGenres(IMDB_DATADIR + "genres.list.gz" ) ).append(
                 '\n' );
-           
+           imdbReader.flush();
             System.out.println("\nParsing keywords");
             message.append(
                 parser.parseKeywords(IMDB_DATADIR + "keywords.list.gz" ) ).append(
                 '\n' );
+            imdbReader.flush();
             System.out.println("\nParsing countries");
             message.append(
                 parser.parseCountries(IMDB_DATADIR + "countries.list.gz" ) ).append(
                 '\n' );
-            
+            imdbReader.flush();
             System.out.println("\nParsing languages");
             message.append(
                 parser.parseLanguages(IMDB_DATADIR + "language.list.gz" ) ).append(
                 '\n' );
-            
-            imdbService.setupReferenceRelationship();
+            imdbReader.flush();
         }
         catch ( IOException e )
         {

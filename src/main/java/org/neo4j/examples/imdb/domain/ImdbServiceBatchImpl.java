@@ -18,7 +18,6 @@
  */
 package org.neo4j.examples.imdb.domain;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -45,15 +44,8 @@ class ImdbServiceBatchImpl implements ImdbService
     @Autowired
     private ImdbLabelEngine labelEngine;
     
-    private final Map<String, Map<String, Long>> inMemoryIndex = new HashMap<String, Map<String, Long>>();
-    
     private static final String TITLE_INDEX = "title";
     private static final String NAME_INDEX = "name";
-
-    public ImdbServiceBatchImpl() {
-        inMemoryIndex.put(NAME_INDEX, new HashMap<String, Long>());
-        inMemoryIndex.put(TITLE_INDEX, new HashMap<String, Long>());
-    }
 
     @Override
     public Person createPerson( final String name ) {
@@ -68,7 +60,6 @@ class ImdbServiceBatchImpl implements ImdbService
     {
         final Person actor = new PersonBatchImpl( batchInserter.createNode(MapUtil.map(NAME_INDEX, name), labelEngine.getLabel("PERSON")) );
         actor.setName(name);
-        inMemoryIndex.get(NAME_INDEX).put(name, actor.getId());
         searchEngine.indexActor( actor );
         batchIndexerExact.add(actor.getId(), MapUtil.map(NAME_INDEX, name));
         return actor;
@@ -90,7 +81,6 @@ class ImdbServiceBatchImpl implements ImdbService
         movie.setTitle(title);
         movie.setYear(year);
         movie.setFormat(format);
-        inMemoryIndex.get(TITLE_INDEX).put(title, movie.getId());
         searchEngine.indexMovie( movie );
         batchIndexerExact.add(movie.getId(), MapUtil.map(TITLE_INDEX, title));
         return movie;
@@ -134,7 +124,8 @@ class ImdbServiceBatchImpl implements ImdbService
 
     private Node getSingleNode(String key, String value) {
         BatchNode node = null;
-        Long nodeId = inMemoryIndex.get(key).get(value);
+        Long nodeId = batchIndexerExact.get(key, value).getSingle();
+
         if (nodeId != null) {
             node = new BatchNode(nodeId, batchInserter.getNodeProperties(nodeId));
         }
@@ -208,5 +199,10 @@ class ImdbServiceBatchImpl implements ImdbService
             RelTypes relTypes = it.next();
             searchEngine.indexProperty(actor.getId(), "role", relTypes.toString());
         }
+    }
+    
+        @Override
+    public void flush() {
+        batchIndexerExact.flush();
     }
 }

@@ -111,4 +111,9 @@ public interface ImdbService
      * @param distinctRoles 
      */
     public void indexRoles(Person actor, Set<RelTypes> distinctRoles);
+
+    /**
+     * Flush pending indexed
+     */
+    public void flush();
 }

@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipInputStream;
+import org.apache.commons.lang.WordUtils;
 import org.graphipedia.dataimport.ProgressCounter;
 import org.neo4j.examples.imdb.domain.MovieFormat;
 import org.neo4j.examples.imdb.domain.RelTypes;
@@ -83,6 +84,7 @@ public class ImdbParser
             MOVIES_SKIPS );
         String line = fileReader.readLine();
         ProgressCounter movieCount = new ProgressCounter("movies");
+        String previousMovieTitle = null;
         while ( line != null )
         {
             // get rid of blank lines, video games, video clip
@@ -103,7 +105,7 @@ public class ImdbParser
                 }
                 if (title.startsWith( "\"" )) {
                     format = MovieFormat.SERIE;
-                    title = title.replace("\"", "");
+                    title = title.replace("\"", "") + " (SERIE)";
                 }
                 if ( line.indexOf( "(TV)" ) != -1 )
                 {
@@ -114,6 +116,11 @@ public class ImdbParser
                 {
                     line = fileReader.readLine();
                     continue;
+                }
+                if (title.equals(previousMovieTitle)) {
+                    continue;
+                } else {
+                    previousMovieTitle = title;
                 }
                 final int year = Integer.parseInt( yearString );
                 buffer.add( new MovieData( title, year, format ) );
@@ -159,7 +166,7 @@ public class ImdbParser
             String votes = tokens[tokens.length-3].trim();  
             
             if (title.startsWith( "\"" )) {
-                title = title.replace("\"", "");
+                title = title.replace("\"", "") + " (SERIE)";
             }
             
             if (title.contains( "{" ) || title.startsWith( "\"" ) )
@@ -183,35 +190,42 @@ public class ImdbParser
      * starts with a tab followed by the movie title.
      * @param actorFile
      *            name of actor list file
-     * @param actressFile
-     *            TODO
      * @throws IOException
      *             if unable to open actor list file
      */
-    public String parseActors( final String actorFile, final String actressFile )
+    public String parseActor( final String actorFile )
         throws IOException
     {
-        if ( actorFile == null )
-        {
-            throw new IllegalArgumentException( "Null actor file" );
-        }
-        if ( actressFile == null )
-        {
-            throw new IllegalArgumentException( "Null actress file" );
-        }
-        String result = "";
         BufferedReader fileReader = getFileReader( actorFile, ACTOR_MARKER,
             ACTOR_SKIPS );
-        result += "Actors: " + parsePersonFile( fileReader, RelTypes.ACTOR ) + "\n";
-        fileReader.close();
-        fileReader = getFileReader( actressFile, ACTRESSES_MARKER,
-            ACTRESS_SKIPS );
-        result += "Actresses: " + parsePersonFile( fileReader, RelTypes.ACTOR );
-        return result;
+        return  "Actors: " + parsePersonFile( fileReader, RelTypes.ACTOR ) + "\n";
+    }
+
+    /**
+     * Parsers a tab-separated actors list file. A line begins with actor name
+     * then followed by a tab and a movie title the actor acted in. Additional
+     * movies the current actor acted in are found on the following line that
+     * starts with a tab followed by the movie title.
+     * 
+     * Flush index between actors and actresses is required 
+     * because they is an error in the source files where Bishop, Pat (III)
+     * appear twice
+     * 
+     * @param actressFile
+     *            name of actor list file
+     * @throws IOException
+     *             if unable to open actor list file
+     */
+    public String parseActress( final String actressFile )
+        throws IOException
+    {
+        BufferedReader fileReader = getFileReader( actressFile, ACTRESSES_MARKER,
+                ACTRESS_SKIPS );
+        return "Actresses: " + parsePersonFile( fileReader, RelTypes.ACTOR );
     }
 
 
-    public Object parsePersonFile(BufferedReader fileReader, RelTypes batchName) throws IOException {
+    public String parsePersonFile(BufferedReader fileReader, RelTypes batchName) throws IOException {
     
         if ( fileReader == null )
         {
@@ -236,9 +250,10 @@ public class ImdbParser
             if ( actorSep >= 0 )
             {
                 String actor = line.substring( 0, actorSep ).trim();
-                if ( !"".equals( actor ) )
+                actor = WordUtils.capitalizeFully(actor); //There is an error in the source file where Cann, Nathan Maxwell is not capitalised
+                if (actor != null && !"".equals( actor ) &&  !actor.equals(currentActor))
                 {
-                    if ( movies.size() > 0 )
+                     if ( movies.size() > 0 )
                     {
                         buffer.add( new PersonData( currentActor, movies
                             .toArray( new RoleData[movies.size()] ) ) );
@@ -257,7 +272,7 @@ public class ImdbParser
                     title = title.substring(0, startEpisodeSep).trim() + title.substring(endEpisodeSep+1, title.length());
                 }
                 if (title.startsWith( "\"" )) {
-                    title = title.replace("\"", "");
+                    title = title.replace("\"", "") + " (SERIE)";
                 }
                 
                 if ( title.length() == 0 || title.contains( "{" )
@@ -399,7 +414,7 @@ public class ImdbParser
             String title = tokens[0].trim();
             String genre = tokens[1].trim();
             if (title.startsWith( "\"" )) {
-                title = title.replace("\"", "");
+                title = title.replace("\"", "") + " (SERIE)";
             }
             if (title.contains( "{" ) || title.startsWith( "\"" ) )
             {
@@ -438,7 +453,7 @@ public class ImdbParser
             String keyword = tokens[1].trim();
             
             if (title.startsWith( "\"" )) {
-                title = title.replace("\"", "");
+                title = title.replace("\"", "") + " (SERIE)";
             }
             
             if (title.contains( "{" ) || title.startsWith( "\"" ) )

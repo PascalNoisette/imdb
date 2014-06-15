@@ -62,4 +62,9 @@ public interface ImdbReader
      */
     public void newAtributeMultiple(String previousTitle, String attributeName, List<String> keywords);
 
+    /**
+     * Flush before proceecing next file
+     */
+    public void flush();
+
 }

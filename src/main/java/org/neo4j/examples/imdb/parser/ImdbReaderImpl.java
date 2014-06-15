@@ -95,4 +95,9 @@ class ImdbReaderImpl implements ImdbReader
     public void newAtributeMultiple(String title, String attributeName, List<String> keywords) {
         imdbService.addAtributeMultipleToMovie(title, attributeName, keywords);
     }
+
+    @Override
+    public void flush() {
+        imdbService.flush();
+    }
 }
