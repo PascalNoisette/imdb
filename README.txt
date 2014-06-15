@@ -4,7 +4,8 @@ IMDB Example Application for Neo4j
 Setup the database
 mvn clean
 mvn compile
-mvn exec:java
+mvn exec:java -Dexec.mainClass="org.neo4j.examples.imdb.parser.Setup"
+mvn exec:java -Dexec.mainClass="org.neo4j.examples.imdb.parser.Stat"
 
 Run the application:
 mvn jetty:run
