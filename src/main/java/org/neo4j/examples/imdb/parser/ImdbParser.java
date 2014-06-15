@@ -264,6 +264,7 @@ public class ImdbParser
                     currentActor = actor;
                 }
                 String title = line.substring( actorSep ).trim();
+                MovieFormat format = MovieFormat.FILM;
                 
                 //normalize title : remove episode name
                 if (title.contains( "{" ) && title.contains( "}" )) {
@@ -272,7 +273,8 @@ public class ImdbParser
                     title = title.substring(0, startEpisodeSep).trim() + title.substring(endEpisodeSep+1, title.length());
                 }
                 if (title.startsWith( "\"" )) {
-                    title = title.replace("\"", "") + " (SERIE)";
+                    format = MovieFormat.SERIE;
+                    title = title.replace("\"", "");
                 }
                 
                 if ( title.length() == 0 || title.contains( "{" )
@@ -313,8 +315,9 @@ public class ImdbParser
                         title = title.substring( 0, spaces ).trim();
                     }
                 }
-                
-                
+                if (format == MovieFormat.SERIE) {
+                    title = title + " (SERIE)";
+                }
                 if (title.equals(previousTitleForActor)) {
                     line = fileReader.readLine();
                     continue;
